@@ -4,20 +4,48 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run prod",
+    "build": "babel src -d dist --extensions \".ts,.js\" --ignore '**/*.test.*' --ignore '**/__test__/**/*'",
+    "prod": "MODE=production node dist/index.js",
+    "dev": "npm run clean:cache && MODE=development babel-node src/index.js --extensions \".ts,.js\"",
+    "watch": "nodemon --ext js,graphql --watch src --exec npm run dev",
+    "watch:docker": "npm run watch -- --legacy-watch",
+    "test": "npm run lint && npm run type-check && npm run build",
+    "lint": "eslint --config .eslintrc.yml --ext ts,js src",
+    "lint:fix": "npm run lint -- --fix",
+    "build:types": "tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "clean:cache": "rm -rf ./node_modules/.cache/@babel"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/breuerfelix/ineedfriends.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Felix Breuer",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/breuerfelix/ineedfriends/issues"
   },
   "homepage": "https://github.com/breuerfelix/ineedfriends#readme",
+  "devDependencies": {
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/node": "latest",
+    "@babel/plugin-proposal-class-properties": "latest",
+    "@babel/plugin-proposal-object-rest-spread": "latest",
+    "@babel/plugin-transform-runtime": "latest",
+    "@babel/preset-env": "latest",
+    "@babel/preset-typescript": "latest",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "babel-eslint": "latest",
+    "eslint": "latest",
+    "nodemon": "latest",
+    "typescript": "latest"
+  },
   "dependencies": {
-    "instagram-private-api": "^1.31.0"
+    "instagram-private-api": "latest"
   }
 }
