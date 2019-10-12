@@ -46,6 +46,8 @@
     "typescript": "latest"
   },
   "dependencies": {
+    "@types/dotenv": "latest",
+    "dotenv": "latest",
     "instagram-private-api": "latest"
   }
 }
