@@ -13,10 +13,8 @@ export class LoginUtil {
     constructor( cookiePath: string ) {
 
       this.credentials =  {
-          // 'IG_USERNAME' : "managersrace",
-          // 'IG_PASSWORD' : "VOVN7KEt"
-          'IG_USERNAME' : "realflorenzerstling",
-          'IG_PASSWORD' : "asdfasdf23"
+          'IG_USERNAME' : "managersrace",
+          'IG_PASSWORD' : "VOVN7KEt"
       };
 
       this.cookiePath = cookiePath
