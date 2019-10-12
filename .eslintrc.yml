@@ -24,8 +24,11 @@ rules:
     - error
     - always
   'no-console': 0
+  'no-undef': 0
   'no-unused-vars':
     - warn
   '@typescript-eslint/indent':
     - error
     - tab
+  '@typescript-eslint/class-name-casing': 0
+  '@typescript-eslint/interface-name-prefix': 0
