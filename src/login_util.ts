@@ -1,13 +1,13 @@
 export class LoginUtil {
 
-    constructor( private dbService: DBService ) {}
+    constructor( ) {}
 
     public setCookiePath( cookiePath ) {
         if ( cookiePath ) {
             this.cookiePath = cookiePath;
         }
     }
-    
+
     public createCookie( ) {
     }
 
