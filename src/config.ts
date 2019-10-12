@@ -12,6 +12,7 @@ const filepath = './data.json'; // TODO change this hardcoded string
 
 let restore = false;
 let cookie = null;
+let user = null;
 let seed = IG_USERNAME!;
 
 // read in previous session
@@ -21,6 +22,7 @@ if (fs.existsSync(filepath)) {
 
 	cookie = data.cookie;
 	seed = data.seed;
+	user = data.user;
 	restore = true;
 }
 
@@ -31,10 +33,15 @@ const config: IConfig = {
 	seed,
 	restore,
 	cookie,
+	user,
 };
 
-function saveSession(cookie: any, seed: string) {
-	fs.writeFile(filepath, JSON.stringify({ cookie, seed }), 'utf-8', err => err ? console.error(err) : void 0);
+function saveSession(cookie: any, seed: string, user: any): void {
+	fs.writeFile(
+		filepath,
+		JSON.stringify({ cookie, seed, user }),
+		'utf-8', err => err ? console.error(err) : void 0
+	);
 }
 
 interface IConfig {
@@ -44,6 +51,7 @@ interface IConfig {
 	restore: boolean;
 	seed: string;
 	cookie: any;
+	user: any;
 }
 
 export {
