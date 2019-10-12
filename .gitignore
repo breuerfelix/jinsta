@@ -1,5 +1,8 @@
 package-lock.json
 
+data/
+ts-dist/
+
 # Logs
 logs
 *.log
