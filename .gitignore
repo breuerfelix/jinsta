@@ -1,6 +1,9 @@
 package-lock.json
 .env
 
+ts-dist
+dist
+
 # Logs
 logs
 *.log
