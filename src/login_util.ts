@@ -1,11 +1,9 @@
 export class LoginUtil {
 
-    constructor( ) {}
+    private cookiePath: string;
 
-    public setCookiePath( cookiePath ) {
-        if ( cookiePath ) {
-            this.cookiePath = cookiePath;
-        }
+    constructor( cookiePath: string ) {
+      this.cookiePath = cookiePath
     }
 
     public createCookie( ) {
@@ -15,5 +13,6 @@ export class LoginUtil {
     }
 
     public deleteCookie( ) {
+    }
 
 }
