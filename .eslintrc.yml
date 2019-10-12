@@ -32,3 +32,4 @@ rules:
     - tab
   '@typescript-eslint/class-name-casing': 0
   '@typescript-eslint/interface-name-prefix': 0
+  '@typescript-eslint/camelcase': 0

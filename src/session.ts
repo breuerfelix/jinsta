@@ -10,23 +10,25 @@ class session {
 		this.config = config;
 	}
 
-	async login() {
+	async login(): Promise<any> {
 		this.ig.state.generateDevice(this.config.seed);
 		this.ig.request.end$.subscribe(this.saveSession.bind(this));
 
 		if (this.config.restore) {
 			await this.ig.state.deserializeCookieJar(this.config.cookie);
-			return;
+			return this.config.user;
 		}
 
 		await this.ig.simulate.preLoginFlow();
-		await this.ig.account.login(this.config.username, this.config.password);
+		const user = await this.ig.account.login(this.config.username, this.config.password);
 		this.ig.simulate.postLoginFlow(); // dont await here
+		this.config.user = user;
+		return user;
 	}
 
-	async saveSession() {
+	async saveSession(): Promise<void> {
 		const cookies = await this.ig.state.serializeCookieJar();
-		saveSession(cookies, this.config.seed);
+		saveSession(cookies, this.config.seed, this.config.user);
 	}
 }
 
