@@ -46,7 +46,7 @@ export class LoginUtil {
               console.log(err);
           }
       });
-      print(data)
+      console.log(data)
       this.cookie = data
     }
 
