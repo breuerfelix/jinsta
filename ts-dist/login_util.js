@@ -8,15 +8,19 @@ var fs = require('fs');
 class LoginUtil {
     constructor(cookiePath) {
         this.credentials = {
-            'IG_USERNAME': "managersrace",
-            'IG_PASSWORD': "VOVN7KEt"
+            // 'IG_USERNAME' : "managersrace",
+            // 'IG_PASSWORD' : "VOVN7KEt"
+            'IG_USERNAME': "realflorenzerstling",
+            'IG_PASSWORD': "asdfasdf23"
         };
         this.cookiePath = cookiePath;
         this.cookie = "";
     }
     login() {
-        var test = this.createSession();
-        console.log(test);
+        this.getCookie(function (err, data) {
+            console.log(content);
+        });
+        // this.createSession()
     }
     saveCookieToFile() {
         const cookiePath = `${this.cookiePath}/${this.credentials.IG_USERNAME}_cookie.json`;
@@ -25,6 +29,32 @@ class LoginUtil {
             console.log(err);
         });
     }
+    getCookie(callback) {
+        const cookiePath = `${this.cookiePath}/${this.credentials.IG_USERNAME}_cookie.json`;
+        var data;
+        fs.readFileSync(cookiePath, function (err, data) {
+            if (!err) {
+                // console.log('received data: ' + data);
+                return callback(null, content);
+            }
+            else {
+                console.log(err);
+            }
+        });
+    }
+    checkIfCookieExists() {
+        const cookiePath = `${this.cookiePath}/${this.credentials.IG_USERNAME}_cookie.json`;
+        try {
+            if (fs.existsSync(cookiePath)) {
+                return true;
+                //file exists
+            }
+        }
+        catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
     createSession() {
         (async () => {
             const ig = new dist_1.IgApiClient();
@@ -32,10 +62,7 @@ class LoginUtil {
             // ig.state.proxyUrl = this.credentials.IG_PROXY;
             // This function executes after every request
             ig.request.end$.subscribe(async () => {
-                // Here you have JSON object with cookies.
-                // You could stringify it and save to any persistent storage
-                this.cookie = await ig.state.serializeCookieJar();
-                const state = {
+                var state = {
                     deviceString: ig.state.deviceString,
                     deviceId: ig.state.deviceId,
                     uuid: ig.state.uuid,
@@ -43,14 +70,27 @@ class LoginUtil {
                     adid: ig.state.adid,
                     build: ig.state.build,
                 };
-                this.saveCookieToFile();
+                if (!this.checkIfCookieExists()) {
+                    this.cookie = await ig.state.serializeCookieJar();
+                    this.saveCookieToFile();
+                }
+                else {
+                    this.getCookie();
+                    console.log(this.cookie);
+                    await ig.state.deserializeCookieJar(this.cookie);
+                    ig.state.deviceString = state.deviceString;
+                    ig.state.deviceId = state.deviceId;
+                    ig.state.uuid = state.uuid;
+                    ig.state.phoneId = state.phoneId;
+                    ig.state.adid = state.adid;
+                    ig.state.build = state.build;
+                }
+                // Here you have JSON object with cookies.
+                // You could stringify it and save to any persistent storage
             });
             // This call will provoke request.$end stream
             await ig.account.login(this.credentials.IG_USERNAME, this.credentials.IG_PASSWORD);
-            return "moin moin";
         })();
-    }
-    getCookie() {
     }
     deleteCookie() {
     }
