@@ -2,7 +2,7 @@ class Constants {
 	public base_interest = .1;
 	public interest_inc = .05;
 
-	public media_delay = 2;
+	public media_delay = 3;
 
 	public like_chance = .3;
 	//public follow_chance = .3;
