@@ -42,6 +42,8 @@ abstract class Feed<T> {
 				const newMedia = await this.getMoreMedia();
 				this.media.push(...newMedia);
 
+				console.log('new media count:', this.media.length);
+
 				this.actions.server_calls++;
 			}
 
@@ -51,6 +53,7 @@ abstract class Feed<T> {
 			}
 
 			for (this.progress; this.progress < this.media.length; this.progress++) {
+				console.log('current progress:', this.progress);
 				// simulate looking at media
 				// TODO look longer for different media types
 				await sleep(this.constants.media_delay);
@@ -58,10 +61,16 @@ abstract class Feed<T> {
 				const med: T = this.media[this.progress];
 
 				// continue with next media
-				if (!chance(this.getInteractionInterest(med))) continue;
+				if (!chance(this.getInteractionInterest(med))) {
+					console.log('skip media!');
+					continue;
+				}
+
+				console.log('interact with media');
 
 				// interact with media
 				if (!this.alreadyLikedMedia(med) && chance(this.constants.like_chance)) {
+					console.log('like media');
 					await this.likeMedia(med);
 
 					this.actions.likes++;
@@ -69,13 +78,17 @@ abstract class Feed<T> {
 				}
 
 				if (chance(this.constants.nested_feed_chance)) {
+					console.log('generate new feed');
 					await this.runNewFeed(med);
 				}
 
 				if (this.isBaseFeed) continue;
 
 				// calculate chance to drop feed
-				if (chance(this.constants.drop_feed_chance)) break;
+				if (chance(this.constants.drop_feed_chance)) {
+					console.log('drop current feed');
+					break;
+				}
 			} // while running loop
 
 			console.log('running loop feed ended');
