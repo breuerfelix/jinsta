@@ -1,7 +1,7 @@
 import { IgApiClient } from 'instagram-private-api';
 import Actions from '../actions';
 import Constants from '../constants';
-import { chance } from '../utils';
+import { chance, sleep } from '../utils';
 import Feed from './base';
 import { User } from '../types';
 
@@ -21,11 +21,11 @@ class TimelineFeed extends Feed<TimelineMedia> {
 		this.timeline = this.client.feed.timeline('pagination');
 	}
 
-	async getMoreMedia(): Promise<TimelineMedia[]> {
+	protected async getMoreMedia(): Promise<TimelineMedia[]> {
 		return await this.timeline.items();
 	}
 
-	getInteractionInterest(media: TimelineMedia): number {
+	protected getInteractionInterest(media: TimelineMedia): number {
 		let interest = this.constants.base_interest;
 
 		for (const key of this.constants.keywords) {
@@ -37,7 +37,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 		return interest;
 	}
 
-	async likeMedia(media: TimelineMedia): Promise<void> {
+	protected async likeMedia(media: TimelineMedia): Promise<void> {
 		const response = await this.client.media.like({
 			mediaId: media.id,
 			moduleInfo: {
@@ -54,8 +54,10 @@ class TimelineFeed extends Feed<TimelineMedia> {
 
 	alreadyLikedMedia = (media: TimelineMedia): boolean => media.has_liked;
 
-	async runNewFeed(media: TimelineMedia): Promise<void> {
-		
+	protected async runNewFeed(media: TimelineMedia): Promise<void> {
+		// TODO implement comment feed
+		console.log('running new feed!');
+		return await sleep(2);
 	}
 }
 

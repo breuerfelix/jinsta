@@ -29,11 +29,11 @@ abstract class Feed<T> {
 		this.isBaseFeed = isBaseFeed;
 	}
 
-	async abstract getMoreMedia(): Promise<T[]>;
-	abstract getInteractionInterest(media: T): number;
-	async abstract likeMedia(media: T): Promise<void>;
-	abstract alreadyLikedMedia(media: T): boolean;
-	async abstract runNewFeed(media: T): Promise<void>;
+	protected abstract async getMoreMedia(): Promise<T[]>;
+	protected abstract getInteractionInterest(media: T): number;
+	protected abstract async likeMedia(media: T): Promise<void>;
+	protected abstract alreadyLikedMedia(media: T): boolean;
+	protected abstract async runNewFeed(media: T): Promise<void>;
 
 	public async run(): Promise<void> {
 		while (this.running) {
