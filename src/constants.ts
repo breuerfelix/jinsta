@@ -4,10 +4,10 @@ class Constants {
 
 	public media_delay = 3;
 
-	public like_chance = .3;
+	public like_chance = .5;
 	//public follow_chance = .3;
-	public nested_feed_chance = .2;
-	public drop_feed_chance = .1
+	public nested_feed_chance = .3;
+	public drop_feed_chance = .2
 
 	public like_limit = 50;
 
