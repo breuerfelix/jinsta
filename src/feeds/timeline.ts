@@ -19,7 +19,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 
 	constructor(user: User, client: IgApiClient) {
 		super(user, client, new Actions(), new Constants(), true);
-		this.timeline = this.client.feed.timeline('warm_start_fetch');
+		this.timeline = this.client.feed.timeline('pagination');
 	}
 
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {
