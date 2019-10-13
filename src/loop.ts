@@ -3,6 +3,10 @@ import { TimelineFeedResponseMedia_or_ad } from 'instagram-private-api/dist/resp
 import envConfig, { IConfig } from './config';
 import session from './session';
 import { sleep, chance } from './utils';
+import {
+	Feed,
+	TimelineFeed,
+} from './feeds';
 
 class loop {
 	private ig: IgApiClient;
@@ -10,16 +14,6 @@ class loop {
 	private session: any;
 	private running = true;
 	private user: any = null;
-
-	// has to be read in dynamically!
-	private keywords = [ 'climate', 'sport', 'vegan', 'world', 'animal' ];
-
-	private base_interest = .1;
-	private interest_inc = .05;
-	private item_delay = 2;
-	private like_chance = .5;
-	private follow_chance = .5;
-	// -----
 
 	constructor(config?: IConfig) {
 		this.ig = new IgApiClient();
@@ -36,7 +30,10 @@ class loop {
 			items: [] as TimelineFeedResponseMedia_or_ad[],
 			item: 0,
 		};
-		const feeds = [basefeed];
+
+		const basefeed = new TimelineFeed(this.user, this.ig);
+
+		const feeds: Feed[] = [new TimelineFeed(this.ig)];
 
 		let test2 = 0
 		while (this.running) {
@@ -93,8 +90,20 @@ class loop {
 					console.log('response from like:', response);
 				}
 
-				//const comments = await this.ig.feed.mediaComments(it.id).items();
-				//console.log(comments)
+				const comments = await this.ig.feed.mediaComments(it.id).items();
+				console.log(comments)
+					const res = await this.ig.media.like({
+						mediaId: comments[0].pk,
+						moduleInfo: {
+							module_name: 'profile',
+							user_id: this.user.pk,
+							username: this.user.username,
+						},
+						// d means like by double tap (1), you cant unlike posts with double tap
+						d: 0,
+					});
+				console.log(res);
+				return;
 
 				//console.log(it);
 				if (test > 5) break
