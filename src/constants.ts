@@ -9,6 +9,8 @@ class Constants {
 	public nested_feed_chance = .2;
 	public drop_feed_chance = .1
 
+	public like_limit = 50;
+
 	public keywords = [ 'climate', 'sport', 'vegan', 'world', 'animal' ];
 }
 

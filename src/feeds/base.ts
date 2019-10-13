@@ -20,7 +20,7 @@ abstract class Feed<T> {
 		client: IgApiClient,
 		actions: Actions,
 		constants: Constants,
-		isBaseFeed = false
+		isBaseFeed = false,
 	) {
 		this.user = user;
 		this.client = client;
@@ -75,6 +75,9 @@ abstract class Feed<T> {
 
 					this.actions.likes++;
 					this.actions.server_calls++;
+
+					// TODO delete this hard coded exit!
+					if (this.actions.likes >= this.constants.like_limit) process.exit(0);
 				}
 
 				if (chance(this.constants.nested_feed_chance)) {
@@ -89,10 +92,10 @@ abstract class Feed<T> {
 					console.log('drop current feed');
 					break;
 				}
-			} // while running loop
+			} // for loop
+		} // while running loop
 
-			console.log('running loop feed ended');
-		}
+		console.log('running loop feed ended');
 	}
 }
 
