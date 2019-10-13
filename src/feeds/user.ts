@@ -1,12 +1,12 @@
 import { IgApiClient } from 'instagram-private-api';
 import Actions from '../actions';
 import Constants from '../constants';
-import { chance } from '../utils';
 import Feed from './base';
 import { User } from '../types';
+import { chance } from '../utils';
 import { CommentFeed } from './comment';
 
-interface TimelineMedia {
+interface UserMedia {
 	id: string;
 	has_liked: boolean;
 	caption: {
@@ -14,19 +14,25 @@ interface TimelineMedia {
 	};
 }
 
-class TimelineFeed extends Feed<TimelineMedia> {
-	private timeline: any;
+class UserFeed extends Feed<UserMedia> {
+	private posts: any;
 
-	constructor(user: User, client: IgApiClient) {
-		super(user, client, new Actions(), new Constants(), true);
-		this.timeline = this.client.feed.timeline('warm_start_fetch');
+	constructor(
+		user: User,
+		client: IgApiClient,
+		actions: Actions,
+		constants: Constants,
+		userID: number,
+	) {
+		super(user, client, actions, constants, false);
+		this.posts = this.client.feed.user(userID);
 	}
 
-	protected async getMoreMedia(): Promise<TimelineMedia[]> {
-		return await this.timeline.items();
+	protected async getMoreMedia(): Promise<UserMedia[]> {
+		return await this.posts.items();
 	}
 
-	protected getInteractionInterest(media: TimelineMedia): number {
+	protected getInteractionInterest(media: UserMedia): number {
 		let interest = this.constants.base_interest;
 		if (media.caption == null) return interest;
 
@@ -39,7 +45,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 		return interest;
 	}
 
-	protected async likeMedia(media: TimelineMedia): Promise<void> {
+	protected async likeMedia(media: UserMedia): Promise<void> {
 		const response = await this.client.media.like({
 			mediaId: media.id,
 			moduleInfo: {
@@ -54,9 +60,9 @@ class TimelineFeed extends Feed<TimelineMedia> {
 		console.log('response from like:', response);
 	}
 
-	alreadyLikedMedia = (media: TimelineMedia): boolean => media.has_liked;
+	alreadyLikedMedia = (media: UserMedia): boolean => media.has_liked;
 
-	protected async runNewFeed(media: TimelineMedia): Promise<void> {
+	protected async runNewFeed(media: UserMedia): Promise<void> {
 		const commentFeed = new CommentFeed(
 			this.user,
 			this.client,
@@ -70,6 +76,6 @@ class TimelineFeed extends Feed<TimelineMedia> {
 }
 
 export {
-	TimelineFeed,
-	TimelineMedia,
+	UserFeed,
+	UserMedia,
 };
