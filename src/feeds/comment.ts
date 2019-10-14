@@ -4,12 +4,16 @@ import Constants from '../constants';
 import Feed from './base';
 import { UserFeed } from './user';
 import { User } from '../types';
+import { sleep } from '../utils';
 
 interface CommentMedia {
 	pk: string;
 	user_id: number;
 	has_liked_comment: boolean;
 	text: string;
+	user: {
+		is_private: boolean;
+	};
 }
 
 class CommentFeed extends Feed<CommentMedia> {
@@ -52,6 +56,11 @@ class CommentFeed extends Feed<CommentMedia> {
 	alreadyLikedMedia = (media: CommentMedia): boolean => media.has_liked_comment;
 
 	protected async runNewFeed(media: CommentMedia): Promise<void> {
+		if (media.user.is_private) {
+			console.log('skipping private user');
+			return await sleep(1);
+		}
+
 		const userFeed = new UserFeed(
 			this.user,
 			this.client,
