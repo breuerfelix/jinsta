@@ -39,6 +39,7 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@types/dotenv": "^6.1.1",
+    "@types/inquirer": "^6.5.0",
     "@types/node": "^12.7.12",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
@@ -50,6 +51,7 @@
   "dependencies": {
     "@babel/runtime": "^7.6.3",
     "dotenv": "^8.1.0",
+    "inquirer": "^7.0.0",
     "instagram-private-api": "^1.31.0"
   }
 }
