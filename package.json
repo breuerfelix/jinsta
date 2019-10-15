@@ -1,6 +1,6 @@
 {
   "name": "ineedfriends",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "instagram automation tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
