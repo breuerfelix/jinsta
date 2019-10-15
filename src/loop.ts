@@ -1,5 +1,5 @@
 import { IgApiClient } from 'instagram-private-api';
-import envConfig, { IConfig } from './config';
+import { IConfig } from './config';
 import session from './session';
 import { User } from './types';
 import {
@@ -12,9 +12,9 @@ class loop {
 	private session: session;
 	private user?: User;
 
-	constructor(config?: IConfig) {
+	constructor(config: IConfig) {
 		this.ig = new IgApiClient();
-		this.config = config || envConfig;
+		this.config = config;
 		this.session = new session(this.ig, this.config);
 	}
 

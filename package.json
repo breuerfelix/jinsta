@@ -1,13 +1,18 @@
 {
   "name": "ineedfriends",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "instagram automation tool",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "gimmefriends": "dist/cli.js"
+  },
   "scripts": {
     "start": "npm run prod",
     "build": "babel src -d dist --extensions \".ts,.js\" --ignore '**/*.test.*' --ignore '**/__test__/**/*'",
     "prod": "node dist/index.js",
     "dev": "babel-node src/index.ts --extensions \".ts,.js\"",
+    "dev:cli": "babel-node src/cli.ts --extensions \".ts,.js\"",
     "watch": "nodemon --ext js,graphql --watch src --exec npm run dev",
     "watch:docker": "npm run watch -- --legacy-watch",
     "test": "npm run lint && npm run type-check && npm run build",
@@ -16,7 +21,8 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "clean:cache": "rm -rf ./node_modules/.cache/@babel"
+    "clean:cache": "rm -rf ./node_modules/.cache/@babel",
+    "publish": "np"
   },
   "repository": {
     "type": "git",
@@ -28,6 +34,9 @@
   "bugs": {
     "url": "https://github.com/breuerfelix/ineedfriends/issues"
   },
+  "files": [
+    "dist/"
+  ],
   "homepage": "https://github.com/breuerfelix/ineedfriends#readme",
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -38,20 +47,21 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
-    "@types/dotenv": "^6.1.1",
     "@types/inquirer": "^6.5.0",
     "@types/node": "^12.7.12",
+    "@types/yargs": "^13.0.3",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.5.1",
     "nodemon": "^1.19.3",
+    "np": "^5.1.1",
     "typescript": "^3.6.4"
   },
   "dependencies": {
     "@babel/runtime": "^7.6.3",
-    "dotenv": "^8.1.0",
     "inquirer": "^7.0.0",
-    "instagram-private-api": "^1.31.0"
+    "instagram-private-api": "^1.31.0",
+    "yargs": "^14.2.0"
   }
 }
