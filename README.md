@@ -13,7 +13,7 @@
 
 - clone this repo
 - `npm install`
-- change username and password in `./index.ts`
+- change username and password in `./dev-index.ts`
 	- dont worry this file is ignored by git
 - `npm run dev`
 

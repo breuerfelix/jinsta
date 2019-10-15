@@ -11,7 +11,7 @@
     "start": "npm run prod",
     "build": "babel src -d dist --extensions \".ts,.js\" --ignore '**/*.test.*' --ignore '**/__test__/**/*'",
     "prod": "node dist/index.js",
-    "dev": "babel-node index.ts --extensions \".ts,.js\"",
+    "dev": "babel-node dev-index.ts --extensions \".ts,.js\"",
     "dev:cli": "babel-node src/cli.ts --extensions \".ts,.js\"",
     "watch": "nodemon --ext js,graphql --watch src --exec npm run dev",
     "watch:docker": "npm run watch -- --legacy-watch",
