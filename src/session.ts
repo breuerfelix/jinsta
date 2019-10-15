@@ -84,7 +84,7 @@ class session {
 
 	async saveSession(): Promise<void> {
 		const cookies = await this.ig.state.serializeCookieJar();
-		saveSession(cookies, this.config.seed, this.config.user);
+		saveSession(this.config.sessionPath, cookies, this.config.seed, this.config.user);
 	}
 }
 
