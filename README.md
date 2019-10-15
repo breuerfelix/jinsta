@@ -3,18 +3,19 @@
 ## getting started
 
 - install node
+- `npm install -g ineedfriends`
+- `ineedfriends -u instagram_username -p instagram_password -s filepath_for_session_storage`
+	- the `-s` parameter could be `./session.json` for example
+	- the file does not have to exist yet, just the folder where it should be saved in
+	- it saves the current session so you don't have to relogin all the time
+
+## develop
+
 - clone this repo
-- cd into folder
 - `npm install`
-
-create a file named `.env` with the following content:
-```env
-IG_USERNAME=insert_username_here
-IG_PASSWORD=insert_password here
-```
-
-- `npm run dev` to start the bot
-- adjust values in `src/constants.ts` to play around
+- change username and password in `./index.ts`
+	- dont worry this file is ignored by git
+- `npm run dev`
 
 ## why did we stop working on instapy ?
 
