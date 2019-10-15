@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "gimmefriends": "dist/cli.js"
+    "ineedfriends": "dist/cli.js"
   },
   "scripts": {
     "start": "npm run prod",
