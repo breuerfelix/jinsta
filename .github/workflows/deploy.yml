@@ -1,0 +1,17 @@
+name: publish
+
+on: release
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: publish npm package
+      uses: epeli/npm-release@v1
+      with:
+        type: stable
+        token: ${{ secrets.NPM_TOKEN }}
+
