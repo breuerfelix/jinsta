@@ -1,7 +1,6 @@
 package-lock.json
 .env
 
-dev-index.ts
 session.json
 data.json
 ts-dist

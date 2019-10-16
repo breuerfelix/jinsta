@@ -1,17 +1,17 @@
 {
-  "name": "ineedfriends",
+  "name": "getflow",
   "version": "0.0.3",
-  "description": "instagram automation tool",
+  "description": "typescript + instagram + flow",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "ineedfriends": "dist/cli.js"
+    "getflow": "dist/cli.js"
   },
   "scripts": {
     "start": "npm run prod",
     "build": "babel src -d dist --extensions \".ts,.js\" --ignore '**/*.test.*' --ignore '**/__test__/**/*'",
     "prod": "node dist/index.js",
-    "dev": "babel-node dev-index.ts --extensions \".ts,.js\"",
+    "dev": "babel-node index.ts --extensions \".ts,.js\"",
     "dev:cli": "babel-node src/cli.ts --extensions \".ts,.js\"",
     "watch": "nodemon --ext js,graphql --watch src --exec npm run dev",
     "watch:docker": "npm run watch -- --legacy-watch",
@@ -24,20 +24,17 @@
     "clean:cache": "rm -rf ./node_modules/.cache/@babel",
     "publish": "np"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/breuerfelix/ineedfriends.git"
-  },
+  "repository": "github:breuerfelix/getflow",
   "keywords": [],
   "author": "Felix Breuer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/breuerfelix/ineedfriends/issues"
+    "url": "https://github.com/breuerfelix/getflow/issues"
   },
   "files": [
     "dist/"
   ],
-  "homepage": "https://github.com/breuerfelix/ineedfriends#readme",
+  "homepage": "https://github.com/breuerfelix/getflow#readme",
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
@@ -47,12 +44,14 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
+    "@types/dotenv": "^6.1.1",
     "@types/inquirer": "^6.5.0",
     "@types/node": "^12.7.12",
     "@types/yargs": "^13.0.3",
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "babel-eslint": "^10.0.3",
+    "dotenv": "^8.2.0",
     "eslint": "^6.5.1",
     "nodemon": "^1.19.3",
     "np": "^5.1.1",
