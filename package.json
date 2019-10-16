@@ -1,11 +1,11 @@
 {
-  "name": "jinflow",
+  "name": "jinsta",
   "version": "0.0.3",
   "description": "javascript + instagram + flow",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "jinflow": "dist/cli.js"
+    "jinsta": "dist/cli.js"
   },
   "scripts": {
     "start": "npm run prod",
@@ -24,17 +24,17 @@
     "clean:cache": "rm -rf ./node_modules/.cache/@babel",
     "publish": "np"
   },
-  "repository": "github:breuerfelix/jinflow",
+  "repository": "github:breuerfelix/jinsta",
   "keywords": [],
   "author": "Felix Breuer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/breuerfelix/jinflow/issues"
+    "url": "https://github.com/breuerfelix/jinsta/issues"
   },
   "files": [
     "dist/"
   ],
-  "homepage": "https://github.com/breuerfelix/jinflow#readme",
+  "homepage": "https://github.com/breuerfelix/jinsta#readme",
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
