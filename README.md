@@ -1,4 +1,4 @@
-# getflow
+# jinsta
 
 special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy)
 
@@ -6,15 +6,15 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 
 - install [nodejs](https://nodejs.org)
 - open the terminal
-- `npm install -g getflow`
-- `getflow -u instagram_username -p instagram_password -s filepath_for_session_storage`
+- `npm install -g jinsta`
+- `jinsta -u instagram_username -p instagram_password -s filepath_for_session_storage`
 	- the `-s` parameter could be `./session.json` for example
 	- the file does not have to exist yet, just the folder where it should be saved in
 	- it saves the current session so you don't have to relogin all the time
 
 ## update
 
-- `npm update -g getflow`
+- `npm update -g jinsta`
 
 ## contribute
 
