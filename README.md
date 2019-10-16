@@ -1,6 +1,6 @@
 # jinsta
 
-special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy)
+special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy) !! (:
 
 ## getting started
 
@@ -15,6 +15,36 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 ## update
 
 - `npm update -g jinsta`
+
+## advanced configuration
+
+- install [nodejs](https://nodejs.org)
+- open the terminal
+- `npm install -g jinsta`
+- create a new file `index.js`
+
+```js
+var jinsta = require('jinsta');
+
+var parseSession = jinsta.parseSession;
+var loop = jinsta.default;
+var constants = jinsta.constants;
+
+// skips parsing if file is not present
+var config = parseSession('./session.json');
+
+config.username = 'instagram_username';
+config.password = 'instagram_password';
+
+// have a look at https://github.com/breuerfelix/jinsta/blob/master/src/constants.ts for an example
+var settings = new constants();
+settings.keywords = [ 'vegan', 'climate', 'sports' ];
+settings.like_limit = 30;
+
+new loop(config, settings).run();
+```
+
+- `node index.js`
 
 ## contribute
 

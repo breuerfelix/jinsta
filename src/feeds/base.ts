@@ -31,6 +31,7 @@ abstract class Feed<T> {
 
 	protected abstract async getMoreMedia(): Promise<T[]>;
 	protected abstract getInteractionInterest(media: T): number;
+	protected abstract isViolate(media: T): boolean;
 	protected abstract async likeMedia(media: T): Promise<void>;
 	protected abstract alreadyLikedMedia(media: T): boolean;
 	protected abstract async runNewFeed(media: T): Promise<void>;
@@ -59,6 +60,11 @@ abstract class Feed<T> {
 				await sleep(this.constants.media_delay);
 
 				const med: T = this.media[this.progress];
+
+				if (this.isViolate(med)) {
+					console.log('media is inappropiate');
+					continue;
+				}
 
 				// continue with next media
 				if (!chance(this.getInteractionInterest(med))) {

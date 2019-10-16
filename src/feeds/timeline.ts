@@ -17,9 +17,23 @@ interface TimelineMedia {
 class TimelineFeed extends Feed<TimelineMedia> {
 	private timeline: any;
 
-	constructor(user: User, client: IgApiClient) {
-		super(user, client, new Actions(), new Constants(), true);
+	constructor(
+		user: User,
+		client: IgApiClient,
+		actions: Actions,
+		constants: Constants,
+		isBaseFeed: boolean,
+	) {
+		super(user, client, actions, constants, isBaseFeed);
 		this.timeline = this.client.feed.timeline('pagination');
+	}
+
+	protected isViolate(media: TimelineMedia): boolean {
+		for (const key of this.constants.blacklist) {
+			if (media.caption.text.includes(key)) return true;
+		}
+
+		return false;
 	}
 
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {

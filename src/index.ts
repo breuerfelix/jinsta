@@ -1,7 +1,11 @@
-import loop from './loop';
+import jinsta from './loop';
+import constants from './constants';
+import { parseSession } from './utils';
 
-export default loop;
+export default jinsta;
 
 export {
-	loop
+	jinsta,
+	constants,
+	parseSession,
 };
