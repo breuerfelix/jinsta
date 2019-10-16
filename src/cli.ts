@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 var args = require('yargs')
-	.scriptName('getflow')
+	.scriptName('jinflow')
 	.usage('Usage: $0 [options]')
 	.options({
 		'u': {
@@ -34,7 +34,7 @@ var args = require('yargs')
 	.showHelpOnFail(false, 'whoops, something went wrong! run with --help')
 	.argv;
 
-var loop = require('getflow').default;
+var loop = require('jinflow').default;
 var path = require('path');
 var fs = require('fs');
 
