@@ -1,20 +1,32 @@
-# youneedfriends ?
+# getflow
+
+special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy)
 
 ## getting started
 
-- install node
-- `npm install -g ineedfriends`
-- `ineedfriends -u instagram_username -p instagram_password -s filepath_for_session_storage`
+- install [nodejs](https://nodejs.org)
+- open the terminal
+- `npm install -g getflow`
+- `getflow -u instagram_username -p instagram_password -s filepath_for_session_storage`
 	- the `-s` parameter could be `./session.json` for example
 	- the file does not have to exist yet, just the folder where it should be saved in
 	- it saves the current session so you don't have to relogin all the time
 
-## develop
+## update
+
+- `npm update -g getflow`
+
+## contribute
 
 - clone this repo
 - `npm install`
-- change username and password in `./dev-index.ts`
-	- dont worry this file is ignored by git
+- create a file named `.env` in the root folder
+
+```env
+IG_USERNAME=instagram_username
+IG_PASSWORD=instagram_password
+```
+
 - `npm run dev`
 
 ## why did we stop working on instapy ?

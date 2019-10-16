@@ -22,7 +22,14 @@ class session {
 
 		if (this.config.restore) {
 			await this.ig.state.deserializeCookieJar(this.config.cookie);
-			return this.config.user;
+
+			try {
+				// check if session is still valid
+				await this.ig.feed.timeline('warm_start_fetch');
+				return this.config.user;
+			} catch {
+				console.log('session expired, going for relogin');
+			}
 		}
 
 		await this.ig.simulate.preLoginFlow();
@@ -49,7 +56,7 @@ class session {
 			{
 				type: 'input',
 				name: 'code',
-				message: 'Enter sms code:',
+				message: 'Enter sms / email code:',
 			},
 		]);
 

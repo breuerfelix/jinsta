@@ -1,5 +1,8 @@
+/* eslint-disable */
 import loop from './src';
-import fs from 'fs';
+
+const fs = require('fs');
+require('dotenv').config();
 
 const filepath = './session.json';
 
@@ -16,9 +19,10 @@ if (fs.existsSync(filepath)) {
 	restore = true;
 }
 
+const { IG_USERNAME, IG_PASSWORD } = process.env;
 const config = {
-	username: 'ENTER_USERNAME_HERE',
-	password: 'ENTER_PASSWORD_HERE',
+	username: IG_USERNAME,
+	password: IG_PASSWORD,
 
 	cookie: cookie,
 	seed: seed,

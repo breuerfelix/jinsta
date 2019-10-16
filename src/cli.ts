@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 var args = require('yargs')
-	.scriptName('ineedfriends')
+	.scriptName('getflow')
 	.usage('Usage: $0 [options]')
 	.options({
 		'u': {
@@ -24,6 +24,7 @@ var args = require('yargs')
 			alias: 'session',
 			demandOption: true,
 			type: 'string',
+			normalize: true,
 			describe: 'Filepath where to store the current Session',
 		},
 	})
@@ -33,7 +34,7 @@ var args = require('yargs')
 	.showHelpOnFail(false, 'whoops, something went wrong! run with --help')
 	.argv;
 
-var loop = require('ineedfriends').default;
+var loop = require('getflow').default;
 var path = require('path');
 var fs = require('fs');
 
