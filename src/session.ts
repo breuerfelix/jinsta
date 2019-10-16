@@ -25,7 +25,8 @@ class session {
 
 			try {
 				// check if session is still valid
-				await this.ig.feed.timeline('warm_start_fetch');
+				const tl = this.ig.feed.timeline('warm_start_fetch');
+				await tl.items();
 				return this.config.user;
 			} catch {
 				console.log('session expired, going for relogin');
