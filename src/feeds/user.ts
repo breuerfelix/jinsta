@@ -32,6 +32,14 @@ class UserFeed extends Feed<UserMedia> {
 		return await this.posts.items();
 	}
 
+	protected isViolate(media: UserMedia): boolean {
+		for (const key of this.constants.blacklist) {
+			if (media.caption.text.includes(key)) return true;
+		}
+
+		return false;
+	}
+
 	protected getInteractionInterest(media: UserMedia): number {
 		let interest = this.constants.base_interest;
 		if (media.caption == null) return interest;

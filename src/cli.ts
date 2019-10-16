@@ -34,34 +34,15 @@ var args = require('yargs')
 	.showHelpOnFail(false, 'whoops, something went wrong! run with --help')
 	.argv;
 
-var loop = require('jinsta').default;
-var path = require('path');
-var fs = require('fs');
+var jinsta = require('jinsta');
+
+var parseSession = jinsta.parseSession;
+var loop = jinsta.default;
 
 var filepath = args.session;
 
-var cookie, seed, user;
-var restore = false;
-
-if (fs.existsSync(filepath)) {
-	var content = fs.readFileSync(filepath, 'utf-8');
-	var data = JSON.parse(content);
-
-	cookie = data.cookie;
-	seed = data.seed;
-	user = data.user;
-	restore = true;
-}
-
-var config = {
-	username: args.username,
-	password: args.password,
-
-	cookie: cookie,
-	seed: seed,
-	user: user,
-	restore: restore,
-	sessionPath: filepath,
-};
+var config = parseSession(filepath);
+config.username = args.username;
+config.password = args.password;
 
 new loop(config).run();
