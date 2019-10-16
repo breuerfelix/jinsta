@@ -7,10 +7,6 @@
   "bin": {
     "jinsta": "dist/cli.js"
   },
-  "np": {
-    "publish": false,
-    "release-draft": false
-  },
   "scripts": {
     "start": "npm run prod",
     "build": "babel src -d dist --extensions \".ts,.js\" --ignore '**/*.test.*' --ignore '**/__test__/**/*'",
@@ -25,7 +21,8 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "clean:cache": "rm -rf ./node_modules/.cache/@babel"
+    "clean:cache": "rm -rf ./node_modules/.cache/@babel",
+    "publish": "np --no-release-draft --no-publish"
   },
   "repository": "github:breuerfelix/jinsta",
   "keywords": [],
