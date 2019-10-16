@@ -9,7 +9,7 @@
   },
   "np": {
     "publish": false,
-    "releaseDraft": false
+    "release-draft": false
   },
   "scripts": {
     "start": "npm run prod",
