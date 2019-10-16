@@ -34,6 +34,14 @@ class CommentFeed extends Feed<CommentMedia> {
 		return await this.comments.items();
 	}
 
+	protected isViolate(media: CommentMedia): boolean {
+		for (const key of this.constants.blacklist) {
+			if (media.text.includes(key)) return true;
+		}
+
+		return false;
+	}
+
 	protected getInteractionInterest(media: CommentMedia): number {
 		let interest = this.constants.base_interest;
 
