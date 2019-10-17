@@ -19,8 +19,9 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 ## advanced configuration
 
 - install [nodejs](https://nodejs.org)
-- open the terminal
-- `npm install -g jinsta`
+- open the terminal and create a new folder
+- `npm init -y`
+- `npm install jinsta`
 - create a new file `index.js`
 
 ```js
