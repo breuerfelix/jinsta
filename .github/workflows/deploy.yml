@@ -1,6 +1,6 @@
 name: publish
 
-on: tag
+on: release
 
 jobs:
   publish:
