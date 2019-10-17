@@ -12,6 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: build and install
+      run: |
+        npm install
+        npm run build
     - name: publish npm package
       uses: epeli/npm-release@v1
       with:
