@@ -22,7 +22,7 @@
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "clean:cache": "rm -rf ./node_modules/.cache/@babel",
-    "publish": "np --no-release-draft --no-publish"
+    "deploy": "np --no-release-draft --no-publish"
   },
   "repository": "github:breuerfelix/jinsta",
   "keywords": [],
