@@ -33,6 +33,7 @@ class UserFeed extends Feed<UserMedia> {
 	}
 
 	protected isViolate(media: UserMedia): boolean {
+		if (media.caption == null) return false;
 		for (const key of this.constants.blacklist) {
 			if (media.caption.text.includes(key)) return true;
 		}
