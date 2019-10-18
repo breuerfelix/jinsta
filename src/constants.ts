@@ -16,7 +16,12 @@ class Constants {
 	public keywords = [ 'climate', 'sport', 'vegan', 'world', 'animal' ];
 	public blacklist = [
 		'porn', 'naked', 'sex', 'vagina', 'penis', 'nude',
-		'tits', 'boobs',
+		'tits', 'boobs', 'like4like', 'nsfw', 'sexy', 'hot',
+		'babe', 'binary', 'bitcoin', 'crypto', 'forex', 'dick',
+		'squirt', 'gay', 'homo', 'nazi', 'jew', 'judaism',
+		'muslim', 'islam', 'hijab', 'niqab', 'farright',
+		'rightwing', 'conservative', 'death', 'racist', 'cbd',
+		'drugs',
 	];
 }
 
