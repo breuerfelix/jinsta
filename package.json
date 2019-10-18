@@ -1,6 +1,6 @@
 {
   "name": "jinsta",
-  "version": "0.0.16-0",
+  "version": "0.0.17",
   "description": "javascript + instagram + flow",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "type-check:watch": "npm run type-check -- --watch",
     "clean:cache": "rm -rf ./node_modules/.cache/@babel",
     "deploy": "np --no-release-draft --no-publish",
-    "deploy:beta": "np prerelease --tags beta --no-release-draft --no-publish --any-branch"
+    "deploy:beta": "np prerelease --tag=beta --no-release-draft --no-publish --any-branch"
   },
   "pre-commit": [
     "lint:fix",
