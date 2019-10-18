@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: full chain
       run: |
+        return 1
         cd ${GITHUB_WORKSPACE}
         git clone https://${GITHUB_ACTOR}:${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
         cd jinsta
@@ -20,5 +21,4 @@ jobs:
         npm run build
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-        git symbolic-ref --short HEAD
         npm run deploy:beta
