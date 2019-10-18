@@ -13,6 +13,7 @@ jobs:
     - uses: actions/checkout@master
       with:
         token: ${{ secrets.GH_TOKEN }}
+        ref: master
     - name: install, test, build, deploy
       run: |
         npm install
@@ -20,4 +21,5 @@ jobs:
         npm run build
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
+        git symbolic-ref --short HEAD
         npm run deploy:beta
