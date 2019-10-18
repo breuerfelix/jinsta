@@ -1,14 +1,12 @@
-name: publish
+name: tag beta
 
 on:
   push:
     branches:
       - master
-    tags:
-      - 'v*'
 
 jobs:
-  publish:
+  tagging:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +16,4 @@ jobs:
         npm install
         npm run test
         npm run build
-    - name: publish npm package
-      uses: epeli/npm-release@v1
-      with:
-        type: stable
-        token: ${{ secrets.NPM_TOKEN }}
-
+        npm run deploy:beta
