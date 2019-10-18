@@ -24,6 +24,11 @@
     "clean:cache": "rm -rf ./node_modules/.cache/@babel",
     "deploy": "np --no-release-draft --no-publish"
   },
+  "pre-commit": [
+    "lint:fix",
+    "lint",
+    "type-check"
+  ],
   "repository": "github:breuerfelix/jinsta",
   "keywords": [],
   "author": "Felix Breuer",
@@ -55,6 +60,7 @@
     "eslint": "^6.5.1",
     "nodemon": "^1.19.3",
     "np": "^5.1.1",
+    "pre-commit": "^1.2.2",
     "typescript": "^3.6.4"
   },
   "dependencies": {
