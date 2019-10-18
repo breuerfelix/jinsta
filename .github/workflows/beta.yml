@@ -21,5 +21,6 @@ jobs:
         npm run build
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
+        git checkout master
         git symbolic-ref --short HEAD
         npm run deploy:beta
