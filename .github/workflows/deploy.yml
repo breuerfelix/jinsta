@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: build and install
       run: |
         npm install
         npm run test
         npm run build
     - name: publish npm package
-      uses: epeli/npm-release@v1
+      uses: epeli/npm-release@master
       with:
         type: stable
         token: ${{ secrets.NPM_TOKEN }}
