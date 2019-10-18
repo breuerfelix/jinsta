@@ -40,8 +40,10 @@ config.password = 'instagram_password';
 
 // have a look at https://github.com/breuerfelix/jinsta/blob/master/src/constants.ts for an example
 var settings = new constants();
-settings.keywords = [ 'vegan', 'climate', 'sports' ];
 settings.like_limit = 30;
+// you can edit every property you want
+// just do it like we change the keywords here
+settings.keywords = [ 'vegan', 'climate', 'sports' ];
 
 new loop(config, settings).run();
 ```
