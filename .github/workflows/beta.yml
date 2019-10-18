@@ -11,7 +11,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: build and install
+      with:
+        ref: master
+    - name: install, test, build, deploy
       run: |
         npm install
         npm run test
@@ -19,8 +21,5 @@ jobs:
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         git remote rm origin
-        echo ${GITHUB_ACTOR}
-        echo ${GITHUB_REPOSITORY}
         git remote add origin https://${GITHUB_ACTOR}:${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
-        git remote -v
         npm run deploy:beta
