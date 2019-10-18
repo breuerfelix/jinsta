@@ -10,17 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-      with:
-        token: ${{ secrets.GH_TOKEN }}
-        ref: master
-    - name: install, test, build, deploy
+    - name: clone and install
       run: |
+        cd ${GITHUB_WORKSPACE}
+        echo ${GITHUB_REPOSITORY}
+        git clone https://${GITHUB_ACTOR}:${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
+        cd ${GITHUB_REPOSITORY}
         npm install
+    - name: test, build, deploy
+      run: |
         npm run test
         npm run build
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-        git checkout master
         git symbolic-ref --short HEAD
         npm run deploy:beta
