@@ -20,6 +20,7 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 
 - install [nodejs](https://nodejs.org)
 - open the terminal and create a new folder
+	- the name the folder must be different than 'jinsta'
 - `npm init -y`
 - `npm install jinsta`
 - create a new file `index.js`
