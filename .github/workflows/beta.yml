@@ -13,9 +13,8 @@ jobs:
     - name: clone and install
       run: |
         cd ${GITHUB_WORKSPACE}
-        echo ${GITHUB_REPOSITORY}
         git clone https://${GITHUB_ACTOR}:${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
-        cd ${GITHUB_REPOSITORY}
+        cd jinsta
         npm install
     - name: test, build, deploy
       run: |
