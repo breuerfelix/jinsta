@@ -30,8 +30,6 @@ var jinsta = require('jinsta');
 var loop = jinsta.default;
 var Config = jinsta.Config;
 
-// skips parsing if file is not present
-
 var config = new Config(
 	'instagram_username',
 	'instagram_password',
