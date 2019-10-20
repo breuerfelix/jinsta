@@ -39,11 +39,10 @@ var jinsta = require('jinsta');
 var loop = jinsta.default;
 var Config = jinsta.Config;
 
-var workspacePath = args.workspace;
 var config = new Config(
 	args.username,
 	args.password,
-	workspacePath,
+	args.workspace,
 );
 
 new loop(config).run();
