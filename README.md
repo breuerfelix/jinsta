@@ -7,10 +7,9 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 - install [nodejs](https://nodejs.org)
 - open the terminal
 - `npm install -g jinsta`
-- `jinsta -u instagram_username -p instagram_password -s filepath_for_session_storage`
-	- the `-s` parameter could be `./session.json` for example
-	- the file does not have to exist yet, just the folder where it should be saved in
-	- it saves the current session so you don't have to relogin all the time
+- `jinsta -u instagram_username -p instagram_password -w workspace_path`
+	- the `-w` parameter could be `./jinsta_data` for example
+	- jinsta will save log files and session data in this folder
 
 ## update
 
@@ -28,24 +27,22 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 ```js
 var jinsta = require('jinsta');
 
-var parseSession = jinsta.parseSession;
 var loop = jinsta.default;
-var constants = jinsta.constants;
+var Config = jinsta.Config;
 
-// skips parsing if file is not present
-var config = parseSession('./session.json');
+var config = new Config(
+	'instagram_username',
+	'instagram_password',
+	'workspace_path' // like './jinsta_data'
+);
 
-config.username = 'instagram_username';
-config.password = 'instagram_password';
-
-// have a look at https://github.com/breuerfelix/jinsta/blob/master/src/constants.ts for an example
-var settings = new constants();
-settings.like_limit = 30;
+// have a look at https://github.com/breuerfelix/jinsta/blob/master/src/config.ts for an example
+config.like_limit = 30;
 // you can edit every property you want
 // just do it like we change the keywords here
-settings.keywords = [ 'vegan', 'climate', 'sports' ];
+config.keywords = [ 'vegan', 'climate', 'sports' ];
 
-new loop(config, settings).run();
+new loop(config).run();
 ```
 
 - `node index.js`

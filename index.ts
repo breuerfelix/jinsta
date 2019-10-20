@@ -1,15 +1,15 @@
-/* eslint-disable */
 import loop from './src';
-import { parseSession } from './src';
+import { Config } from './src';
 
 require('dotenv').config();
 
-const filepath = './session.json';
-
-const config = parseSession(filepath);
+const workspace = './workspace';
 
 const { IG_USERNAME, IG_PASSWORD } = process.env;
-config.username = IG_USERNAME;
-config.password = IG_PASSWORD;
+const config = new Config(
+	IG_USERNAME,
+	IG_PASSWORD,
+	workspace,
+);
 
 new loop(config).run();

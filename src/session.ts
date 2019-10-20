@@ -3,17 +3,32 @@ import {
 	IgCheckpointError,
 	IgLoginTwoFactorRequiredError,
 } from 'instagram-private-api';
-import { IConfig, saveSession } from './config';
+import { Config } from './config';
 import { User } from './types';
 import inquirer from 'inquirer';
+import fs from 'fs';
+
+interface sessionFile {
+	cookie: any;
+	user: any;
+	seed: string;
+	restore: boolean;
+}
 
 class session {
 	private ig: IgApiClient;
-	private config: IConfig;
+	private config: Config;
 
-	constructor(ig: IgApiClient, config: IConfig) {
+	constructor(ig: IgApiClient, config: Config) {
 		this.ig = ig;
 		this.config = config;
+
+		// try to parse session from file
+		const additionalConfig = this.parseSession(this.config.sessionPath);
+		this.config.restore = additionalConfig.restore;
+		this.config.cookie = additionalConfig.cookie;
+		this.config.seed = additionalConfig.seed;
+		this.config.user = additionalConfig.user;
 	}
 
 	async login(): Promise<User> {
@@ -91,8 +106,39 @@ class session {
 	}
 
 	async saveSession(): Promise<void> {
-		const cookies = await this.ig.state.serializeCookieJar();
-		saveSession(this.config.sessionPath, cookies, this.config.seed, this.config.user);
+		const cookie = await this.ig.state.serializeCookieJar();
+		const { sessionPath, user, seed } = this.config;
+		fs.writeFile(
+			sessionPath,
+			JSON.stringify({ cookie, seed, user }),
+			'utf-8', err => err ? console.error(err) : void 0,
+		);
+	}
+
+	parseSession(filepath: string): sessionFile {
+		let cookie = null;
+		let user = null;
+		let seed = null;
+		let restore = false;
+
+		if (fs.existsSync(filepath)) {
+			const content = fs.readFileSync(filepath, 'utf-8');
+			const data = JSON.parse(content);
+
+			cookie = data.cookie;
+			seed = data.seed;
+			user = data.user;
+			restore = true;
+		}
+
+		const config = {
+			cookie,
+			user,
+			seed,
+			restore,
+		};
+
+		return config;
 	}
 }
 
