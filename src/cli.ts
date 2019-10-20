@@ -20,12 +20,12 @@ var args = require('yargs')
 			describe: 'Instagram Login Password',
 			implies: 'username',
 		},
-		's': {
-			alias: 'session',
+		'w': {
+			alias: 'workspace',
 			demandOption: true,
 			type: 'string',
 			normalize: true,
-			describe: 'Filepath where to store the current Session',
+			describe: 'Folder where permanent data is stored',
 		},
 	})
 	.help('h')
@@ -36,13 +36,14 @@ var args = require('yargs')
 
 var jinsta = require('jinsta');
 
-var parseSession = jinsta.parseSession;
 var loop = jinsta.default;
+var Config = jinsta.Config;
 
-var filepath = args.session;
-
-var config = parseSession(filepath);
-config.username = args.username;
-config.password = args.password;
+var workspacePath = args.workspace;
+var config = new Config(
+	args.username,
+	args.password,
+	workspacePath,
+);
 
 new loop(config).run();

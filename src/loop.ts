@@ -1,10 +1,8 @@
 import { IgApiClient } from 'instagram-private-api';
-import { IConfig } from './config';
+import { Config } from './config';
 import session from './session';
-import { User } from './types';
-
-import Actions from './actions';
-import Constants from './constants';
+import { store } from './store';
+import fs from 'fs';
 
 import {
 	TimelineFeed,
@@ -12,27 +10,31 @@ import {
 
 class loop {
 	private ig: IgApiClient;
-	private config: IConfig;
-	private constants: Constants;
+	private config: Config;
 	private session: session;
-	private user?: User;
 
-	constructor(config: IConfig, constants?: Constants) {
-		// TODO check if config and constants are valid
+	constructor(config: Config) {
+		// TODO check if config is valid
+		if (!fs.existsSync(config.workspacePath)) fs.mkdirSync(config.workspacePath);
+
 		this.ig = new IgApiClient();
 		this.config = config;
 		this.session = new session(this.ig, this.config);
-		this.constants = constants || new Constants();
+
+		if (config.likeLimit > 0) {
+			// setup process exit when like limit reached
+			store.pluck('imageLikes').subscribe(likes => {
+				if (likes >= this.config.likeLimit) process.exit(0);
+			});
+		}
 	}
 
 	async run(): Promise<void> {
-		this.user = await this.session.login();
+		this.config.user = await this.session.login();
 
 		const basefeed = new TimelineFeed(
-			this.user!,
 			this.ig,
-			new Actions(),
-			this.constants,
+			this.config,
 			true
 		);
 

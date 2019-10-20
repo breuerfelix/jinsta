@@ -1,9 +1,7 @@
 import { IgApiClient } from 'instagram-private-api';
-import Actions from '../actions';
-import Constants from '../constants';
 import { chance } from '../utils';
+import { Config } from '../config';
 import Feed from './base';
-import { User } from '../types';
 import { CommentFeed } from './comment';
 
 interface TimelineMedia {
@@ -18,19 +16,17 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	private timeline: any;
 
 	constructor(
-		user: User,
 		client: IgApiClient,
-		actions: Actions,
-		constants: Constants,
+		config: Config,
 		isBaseFeed: boolean,
 	) {
-		super(user, client, actions, constants, isBaseFeed);
+		super(client, config, isBaseFeed);
 		this.timeline = this.client.feed.timeline('pagination');
 	}
 
 	protected isViolate(media: TimelineMedia): boolean {
 		if (media.caption == null) return false;
-		for (const key of this.constants.blacklist) {
+		for (const key of this.config.blacklist) {
 			if (media.caption.text.includes(key)) return true;
 		}
 
@@ -42,12 +38,12 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	}
 
 	protected getInteractionInterest(media: TimelineMedia): number {
-		let interest = this.constants.base_interest;
+		let interest = this.config.baseInterest;
 		if (media.caption == null) return interest;
 
-		for (const key of this.constants.keywords) {
+		for (const key of this.config.keywords) {
 			if (media.caption.text.includes(key)) {
-				interest += this.constants.interest_inc;
+				interest += this.config.interestInc;
 			}
 		}
 
@@ -55,12 +51,13 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	}
 
 	protected async likeMedia(media: TimelineMedia): Promise<void> {
+		const { user } = this.config;
 		const response = await this.client.media.like({
 			mediaId: media.id,
 			moduleInfo: {
 				module_name: 'profile',
-				user_id: this.user.pk,
-				username: this.user.username,
+				user_id: user.pk,
+				username: user.username,
 			},
 			// d means like by double tap (1), you cant unlike posts with double tap
 			d: chance(.5) ? 0 : 1,
@@ -73,10 +70,8 @@ class TimelineFeed extends Feed<TimelineMedia> {
 
 	protected async runNewFeed(media: TimelineMedia): Promise<void> {
 		const commentFeed = new CommentFeed(
-			this.user,
 			this.client,
-			this.actions,
-			this.constants,
+			this.config,
 			media.id,
 		);
 

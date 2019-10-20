@@ -1,11 +1,12 @@
 import jinsta from './loop';
-import constants from './constants';
-import { parseSession } from './utils';
+import { Config } from './config';
+import { store, like$ } from './store';
 
 export default jinsta;
 
 export {
 	jinsta,
-	constants,
-	parseSession,
+	Config,
+	store,
+	like$,
 };
