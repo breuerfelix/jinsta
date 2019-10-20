@@ -1,14 +1,11 @@
 import { IgApiClient } from 'instagram-private-api';
-import Actions from '../actions';
-import Constants from '../constants';
+import { Config } from '../config';
 import { chance, sleep } from '../utils';
-import { User } from '../types';
+import { store } from '../store';
 
 abstract class Feed<T> {
-	protected user: User;
 	protected client: IgApiClient;
-	protected actions: Actions;
-	protected constants: Constants;
+	protected config: Config;
 
 	private media: T[] = [];
 	private progress = 0;
@@ -16,16 +13,12 @@ abstract class Feed<T> {
 	private isBaseFeed: boolean;
 
 	constructor(
-		user: User,
 		client: IgApiClient,
-		actions: Actions,
-		constants: Constants,
+		config: Config,
 		isBaseFeed = false,
 	) {
-		this.user = user;
 		this.client = client;
-		this.actions = actions;
-		this.constants = constants;
+		this.config = config;
 		this.isBaseFeed = isBaseFeed;
 	}
 
@@ -45,7 +38,7 @@ abstract class Feed<T> {
 
 				console.log('new media count:', this.media.length);
 
-				this.actions.server_calls++;
+				store.change(({ serverCalls }) => ({ serverCalls: serverCalls++ }));
 			}
 
 			if (this.progress >= this.media.length) {
@@ -57,7 +50,7 @@ abstract class Feed<T> {
 				console.log('current progress:', this.progress);
 				// simulate looking at media
 				// TODO look longer for different media types
-				await sleep(this.constants.media_delay);
+				await sleep(this.config.mediaDelay);
 
 				const med: T = this.media[this.progress];
 
@@ -75,18 +68,16 @@ abstract class Feed<T> {
 				console.log('interact with media');
 
 				// interact with media
-				if (!this.alreadyLikedMedia(med) && chance(this.constants.like_chance)) {
+				if (!this.alreadyLikedMedia(med) && chance(this.config.likeChance)) {
 					console.log('like media');
 					await this.likeMedia(med);
 
-					this.actions.likes++;
-					this.actions.server_calls++;
-
-					// TODO delete this hard coded exit!
-					if (this.actions.likes >= this.constants.like_limit) process.exit(0);
+					store.change(({ imageLikes }) => ({ imageLikes: imageLikes++ }));
+					store.change(({ serverCalls }) => ({ serverCalls: serverCalls++ }));
+					store.setState({ like$: med });
 				}
 
-				if (chance(this.constants.nested_feed_chance)) {
+				if (chance(this.config.nestedFeedChance)) {
 					console.log('generate new feed');
 					await this.runNewFeed(med);
 				}
@@ -94,7 +85,7 @@ abstract class Feed<T> {
 				if (this.isBaseFeed) continue;
 
 				// calculate chance to drop feed
-				if (chance(this.constants.drop_feed_chance)) {
+				if (chance(this.config.dropFeedChance)) {
 					console.log('drop current feed');
 					break;
 				}

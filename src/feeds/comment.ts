@@ -1,10 +1,9 @@
 import { IgApiClient } from 'instagram-private-api';
-import Actions from '../actions';
-import Constants from '../constants';
 import Feed from './base';
 import { UserFeed } from './user';
-import { User } from '../types';
+import { Config } from '../config';
 import { sleep } from '../utils';
+import { store } from '../store';
 
 interface CommentMedia {
 	pk: string;
@@ -20,13 +19,11 @@ class CommentFeed extends Feed<CommentMedia> {
 	private comments: any;
 
 	constructor(
-		user: User,
 		client: IgApiClient,
-		actions: Actions,
-		constants: Constants,
+		config: Config,
 		mediaID: string,
 	) {
-		super(user, client, actions, constants, false);
+		super(client, config, false);
 		this.comments = this.client.feed.mediaComments(mediaID);
 	}
 
@@ -35,7 +32,7 @@ class CommentFeed extends Feed<CommentMedia> {
 	}
 
 	protected isViolate(media: CommentMedia): boolean {
-		for (const key of this.constants.blacklist) {
+		for (const key of this.config.blacklist) {
 			if (media.text.includes(key)) return true;
 		}
 
@@ -43,11 +40,11 @@ class CommentFeed extends Feed<CommentMedia> {
 	}
 
 	protected getInteractionInterest(media: CommentMedia): number {
-		let interest = this.constants.base_interest;
+		let interest = this.config.baseInterest;
 
-		for (const key of this.constants.keywords) {
+		for (const key of this.config.keywords) {
 			if (media.text.includes(key)) {
-				interest += this.constants.interest_inc;
+				interest += this.config.interestInc;
 			}
 		}
 
@@ -57,8 +54,8 @@ class CommentFeed extends Feed<CommentMedia> {
 	protected async likeMedia(media: CommentMedia): Promise<void> {
 		console.log('comment liking currently not supported');
 		// TODO remove when function is implemented
-		this.actions.likes--;
-		this.actions.server_calls--;
+		store.change(({ imageLikes }) => ({ imageLikes: imageLikes-- }));
+		store.change(({ serverCalls }) => ({ serverCalls: serverCalls-- }));
 	}
 
 	alreadyLikedMedia = (media: CommentMedia): boolean => media.has_liked_comment;
@@ -70,10 +67,8 @@ class CommentFeed extends Feed<CommentMedia> {
 		}
 
 		const userFeed = new UserFeed(
-			this.user,
 			this.client,
-			this.actions,
-			this.constants,
+			this.config,
 			media.user_id,
 		);
 

@@ -1,6 +1,7 @@
 package-lock.json
 .env
 
+workspace
 session.json
 data.json
 ts-dist

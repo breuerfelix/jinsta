@@ -68,6 +68,8 @@
     "@babel/runtime": "^7.6.3",
     "inquirer": "^7.0.0",
     "instagram-private-api": "^1.31.0",
+    "rxjs": "^6.5.3",
+    "unistore": "^3.5.0",
     "yargs": "^14.2.0"
   }
 }

@@ -1,8 +1,6 @@
 import { IgApiClient } from 'instagram-private-api';
-import Actions from '../actions';
-import Constants from '../constants';
 import Feed from './base';
-import { User } from '../types';
+import { Config } from '../config';
 import { chance } from '../utils';
 import { CommentFeed } from './comment';
 
@@ -18,13 +16,11 @@ class UserFeed extends Feed<UserMedia> {
 	private posts: any;
 
 	constructor(
-		user: User,
 		client: IgApiClient,
-		actions: Actions,
-		constants: Constants,
+		config: Config,
 		userID: number,
 	) {
-		super(user, client, actions, constants, false);
+		super(client, config, false);
 		this.posts = this.client.feed.user(userID);
 	}
 
@@ -34,7 +30,7 @@ class UserFeed extends Feed<UserMedia> {
 
 	protected isViolate(media: UserMedia): boolean {
 		if (media.caption == null) return false;
-		for (const key of this.constants.blacklist) {
+		for (const key of this.config.blacklist) {
 			if (media.caption.text.includes(key)) return true;
 		}
 
@@ -42,12 +38,12 @@ class UserFeed extends Feed<UserMedia> {
 	}
 
 	protected getInteractionInterest(media: UserMedia): number {
-		let interest = this.constants.base_interest;
+		let interest = this.config.baseInterest;
 		if (media.caption == null) return interest;
 
-		for (const key of this.constants.keywords) {
+		for (const key of this.config.keywords) {
 			if (media.caption.text.includes(key)) {
-				interest += this.constants.interest_inc;
+				interest += this.config.interestInc;
 			}
 		}
 
@@ -55,12 +51,13 @@ class UserFeed extends Feed<UserMedia> {
 	}
 
 	protected async likeMedia(media: UserMedia): Promise<void> {
+		const { user } = this.config;
 		const response = await this.client.media.like({
 			mediaId: media.id,
 			moduleInfo: {
 				module_name: 'profile',
-				user_id: this.user.pk,
-				username: this.user.username,
+				user_id: user.pk,
+				username: user.username,
 			},
 			// d means like by double tap (1), you cant unlike posts with double tap
 			d: chance(.5) ? 0 : 1,
@@ -73,10 +70,8 @@ class UserFeed extends Feed<UserMedia> {
 
 	protected async runNewFeed(media: UserMedia): Promise<void> {
 		const commentFeed = new CommentFeed(
-			this.user,
 			this.client,
-			this.actions,
-			this.constants,
+			this.config,
 			media.id,
 		);
 
