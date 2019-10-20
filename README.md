@@ -9,7 +9,6 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 - `npm install -g jinsta`
 - `jinsta -u instagram_username -p instagram_password -w workspace_path`
 	- the `-w` parameter could be `./jinsta_data` for example
-	- the folder has to exist
 	- jinsta will save log files and session data in this folder
 
 ## update
