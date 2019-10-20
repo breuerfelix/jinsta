@@ -1,6 +1,6 @@
 {
   "name": "jinsta",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "javascript + instagram + flow",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
