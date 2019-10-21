@@ -3,6 +3,7 @@ import Feed from './base';
 import { Config } from '../config';
 import { chance } from '../utils';
 import { CommentFeed } from './comment';
+import logger from '../logging';
 
 interface UserMedia {
 	id: string;
@@ -29,6 +30,7 @@ class UserFeed extends Feed<UserMedia> {
 
 	protected async getMoreMedia(): Promise<UserMedia[]> {
 		if (this.refetchCount >= this.maxRefetch) return [];
+		logger.info('getting more media from user feed \'%s\'', this.config.user.username);
 		this.refetchCount++;
 		return await this.posts.items();
 	}
@@ -68,7 +70,7 @@ class UserFeed extends Feed<UserMedia> {
 			d: chance(.5) ? 0 : 1,
 		});
 
-		console.log('response from like:', response);
+		logger.info('response from like: %s', response);
 	}
 
 	alreadyLikedMedia = (media: UserMedia): boolean => media.has_liked;

@@ -4,6 +4,7 @@ import { UserFeed } from './user';
 import { Config } from '../config';
 import { sleep } from '../utils';
 import { store } from '../store';
+import logger from '../logging';
 
 interface CommentMedia {
 	pk: string;
@@ -32,6 +33,7 @@ class CommentFeed extends Feed<CommentMedia> {
 
 	protected async getMoreMedia(): Promise<CommentMedia[]> {
 		if (this.refetchCount >= this.maxRefetch) return [];
+		logger.info('getting more comments');
 		this.refetchCount++;
 		return await this.comments.items();
 	}
@@ -57,7 +59,7 @@ class CommentFeed extends Feed<CommentMedia> {
 	}
 
 	protected async likeMedia(media: CommentMedia): Promise<void> {
-		console.log('comment liking currently not supported');
+		logger.info('comment liking currently not supported');
 		// TODO remove when function is implemented
 		store.change(({ imageLikes }) => ({ imageLikes: imageLikes-- }));
 		store.change(({ serverCalls }) => ({ serverCalls: serverCalls-- }));
@@ -67,7 +69,7 @@ class CommentFeed extends Feed<CommentMedia> {
 
 	protected async runNewFeed(media: CommentMedia): Promise<void> {
 		if (media.user.is_private) {
-			console.log('skipping private user');
+			logger.info('skipping private user');
 			return await sleep(1);
 		}
 

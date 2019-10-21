@@ -7,6 +7,7 @@ import fs from 'fs';
 import {
 	TimelineFeed,
 } from './feeds';
+import logger from './logging';
 
 class loop {
 	private ig: IgApiClient;
@@ -42,11 +43,11 @@ class loop {
 			true
 		);
 
-		console.log('start running basefeed');
+		logger.info('start running basefeed');
 
 		await basefeed.run();
 
-		console.log('finished running basefeed');
+		logger.info('finished running basefeed');
 	}
 }
 
