@@ -2,6 +2,7 @@ import { IgApiClient } from 'instagram-private-api';
 import { Config } from '../config';
 import { chance, sleep } from '../utils';
 import { store } from '../store';
+import logger from '../logging';
 
 abstract class Feed<T> {
 	protected client: IgApiClient;
@@ -36,18 +37,18 @@ abstract class Feed<T> {
 				const newMedia = await this.getMoreMedia();
 				this.media.push(...newMedia);
 
-				console.log('new media count:', this.media.length);
+				logger.info('new media count: %d', this.media.length);
 
 				store.change(({ serverCalls }) => ({ serverCalls: serverCalls++ }));
 			}
 
 			if (this.progress >= this.media.length) {
-				console.log('no more new media');
+				logger.info('no more new media');
 				break;
 			}
 
 			for (this.progress; this.progress < this.media.length; this.progress++) {
-				console.log('current progress:', this.progress);
+				logger.info('current progress: %d / %d', this.progress, this.media.length);
 				// simulate looking at media
 				// TODO look longer for different media types
 				await sleep(this.config.mediaDelay);
@@ -55,21 +56,21 @@ abstract class Feed<T> {
 				const med: T = this.media[this.progress];
 
 				if (this.isViolate(med)) {
-					console.log('media is inappropiate');
+					logger.info('media is inappropiate');
 					continue;
 				}
 
 				// continue with next media
 				if (!chance(this.getInteractionInterest(med))) {
-					console.log('skip media!');
+					logger.info('skip media!');
 					continue;
 				}
 
-				console.log('interact with media');
+				logger.info('interact with media');
 
 				// interact with media
 				if (!this.alreadyLikedMedia(med) && chance(this.config.likeChance)) {
-					console.log('like media');
+					logger.info('like media');
 					await this.likeMedia(med);
 
 					store.change(({ imageLikes }) => ({ imageLikes: imageLikes++ }));
@@ -78,7 +79,7 @@ abstract class Feed<T> {
 				}
 
 				if (chance(this.config.nestedFeedChance)) {
-					console.log('generate new feed');
+					logger.info('generate new feed');
 					await this.runNewFeed(med);
 				}
 
@@ -86,13 +87,13 @@ abstract class Feed<T> {
 
 				// calculate chance to drop feed
 				if (chance(this.config.dropFeedChance)) {
-					console.log('drop current feed');
+					logger.info('drop current feed');
 					break;
 				}
 			} // for loop
 		} // while running loop
 
-		console.log('running loop feed ended');
+		logger.info('running loop feed ended');
 	}
 }
 

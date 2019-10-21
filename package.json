@@ -70,6 +70,8 @@
     "instagram-private-api": "^1.31.0",
     "rxjs": "^6.5.3",
     "unistore": "^3.5.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.2.1",
     "yargs": "^14.2.0"
   }
 }

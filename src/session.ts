@@ -7,6 +7,7 @@ import { Config } from './config';
 import { User } from './types';
 import inquirer from 'inquirer';
 import fs from 'fs';
+import logger from './logging';
 
 interface sessionFile {
 	cookie: any;
@@ -45,7 +46,7 @@ class session {
 				await tl.items();
 				return this.config.user;
 			} catch {
-				console.log('session expired, going for relogin');
+				logger.info('session expired, going for relogin');
 			}
 		}
 
@@ -112,7 +113,7 @@ class session {
 		fs.writeFile(
 			sessionPath,
 			JSON.stringify({ cookie, seed, user }),
-			'utf-8', err => err ? console.error(err) : void 0,
+			'utf-8', err => err ? logger.error(err) : void 0,
 		);
 	}
 
