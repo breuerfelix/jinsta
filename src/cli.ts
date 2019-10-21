@@ -39,6 +39,11 @@ var args = require('yargs')
 			default: false,
 			describe: 'Force to reset the Session',
 		},
+		'likeLimit': {
+			type: 'string',
+			default: null,
+			describe: 'Like limit when the bot should exit',
+		},
 		'proxy': {
 			type: 'string',
 			default: null,
@@ -65,5 +70,6 @@ var config = new Config(
 config.reset = args.reset;
 config.seed = args.seed;
 config.proxy = args.proxy;
+if (args.likeLimit) config.likeLimit = args.likeLimit;
 
 new loop(config).run();
