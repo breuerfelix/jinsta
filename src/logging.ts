@@ -11,7 +11,7 @@ const logger = winston.createLogger({
 	transports: [
 		new winston.transports.Console({
 			format: format.combine(winston.format.splat(), winston.format.cli()),
-			level: 'info'
+			level: 'info',
 		}),
 		new DailyRotateFile({
 			format: format.combine(winston.format.splat(), winston.format.timestamp(), winston.format.padLevels(), fileLogFormat),
@@ -20,9 +20,9 @@ const logger = winston.createLogger({
 			datePattern: 'YYYY-MM-DD',
 			zippedArchive: true,
 			maxSize: '20m',
-			maxFiles: '7d'
-		})
-	]
+			maxFiles: '7d',
+		}),
+	],
 });
 
 export default logger;
