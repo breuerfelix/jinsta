@@ -35,7 +35,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	}
 
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {
-		logger.info('getting more timeline items for user \'%s\'', this.config.user.username);
+		logger.info('getting more timeline items for user \'%s\'', this.config.username);
 		return await this.timeline.items();
 	}
 
