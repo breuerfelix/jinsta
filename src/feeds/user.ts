@@ -15,6 +15,9 @@ interface UserMedia {
 class UserFeed extends Feed<UserMedia> {
 	private posts: any;
 
+	private maxRefetch = 1;
+	private refetchCount = 0;
+
 	constructor(
 		client: IgApiClient,
 		config: Config,
@@ -25,6 +28,8 @@ class UserFeed extends Feed<UserMedia> {
 	}
 
 	protected async getMoreMedia(): Promise<UserMedia[]> {
+		if (this.refetchCount >= this.maxRefetch) return [];
+		this.refetchCount++;
 		return await this.posts.items();
 	}
 
