@@ -3,6 +3,7 @@ import { chance } from '../utils';
 import { Config } from '../config';
 import Feed from './base';
 import { CommentFeed } from './comment';
+import logger from '../logging';
 
 interface TimelineMedia {
 	id: string;
@@ -34,6 +35,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	}
 
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {
+		logger.info('getting more timeline items for user \'%s\'', this.config.user.username);
 		return await this.timeline.items();
 	}
 
@@ -63,7 +65,7 @@ class TimelineFeed extends Feed<TimelineMedia> {
 			d: chance(.5) ? 0 : 1,
 		});
 
-		console.log('response from like:', response);
+		logger.info('response from like: %s', response);
 	}
 
 	alreadyLikedMedia = (media: TimelineMedia): boolean => media.has_liked;
