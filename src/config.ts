@@ -16,7 +16,6 @@ class Config {
 	// paths
 	public workspacePath: string;
 	public sessionPath: string;
-	public logPath: string;
 
 	// application config
 	public baseInterest = .05;
@@ -57,7 +56,6 @@ class Config {
 		this.password = password;
 		this.workspacePath = path.resolve(path.normalize(workspace));
 		this.sessionPath = path.resolve(this.workspacePath, 'session.json');
-		this.logPath = path.resolve(this.workspacePath, 'log.txt');
 	}
 }
 
