@@ -4,8 +4,10 @@ import { User } from './types';
 class Config {
 	public username: string;
 	public password: string;
+	public proxy: string;
 
 	// only for session restor
+	public reset = false;
 	public restore = false;
 	public seed: string;
 	public cookie: any;

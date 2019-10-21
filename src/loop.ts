@@ -16,8 +16,12 @@ class loop {
 	constructor(config: Config) {
 		// TODO check if config is valid
 		if (!fs.existsSync(config.workspacePath)) fs.mkdirSync(config.workspacePath);
+		// use username as seed as default
+		if (!config.seed) config.seed = config.username;
 
 		this.ig = new IgApiClient();
+		if (config.proxy) this.ig.state.proxyUrl = config.proxy;
+
 		this.config = config;
 		this.session = new session(this.ig, this.config);
 

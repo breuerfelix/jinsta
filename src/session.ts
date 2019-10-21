@@ -23,6 +23,7 @@ class session {
 		this.ig = ig;
 		this.config = config;
 
+		if (this.config.reset) return; // do not restore
 		// try to parse session from file
 		const additionalConfig = this.parseSession(this.config.sessionPath);
 		this.config.restore = additionalConfig.restore;
