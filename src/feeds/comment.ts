@@ -18,6 +18,9 @@ interface CommentMedia {
 class CommentFeed extends Feed<CommentMedia> {
 	private comments: any;
 
+	private maxRefetch = 1;
+	private refetchCount = 0;
+
 	constructor(
 		client: IgApiClient,
 		config: Config,
@@ -28,6 +31,8 @@ class CommentFeed extends Feed<CommentMedia> {
 	}
 
 	protected async getMoreMedia(): Promise<CommentMedia[]> {
+		if (this.refetchCount >= this.maxRefetch) return [];
+		this.refetchCount++;
 		return await this.comments.items();
 	}
 

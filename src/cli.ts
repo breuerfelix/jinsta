@@ -27,6 +27,23 @@ var args = require('yargs')
 			normalize: true,
 			describe: 'Folder where permanent data is stored',
 		},
+		's': {
+			alias: 'seed',
+			type: 'string',
+			default: null,
+			describe: 'Seed for generating the Device ID',
+		},
+		'r': {
+			alias: 'reset',
+			type: 'boolean',
+			default: false,
+			describe: 'Force to reset the Session',
+		},
+		'proxy': {
+			type: 'string',
+			default: null,
+			describe: 'Proxy URL',
+		},
 	})
 	.help('h')
 	.alias('h', 'help')
@@ -44,5 +61,9 @@ var config = new Config(
 	args.password,
 	args.workspace,
 );
+
+config.reset = args.reset;
+config.seed = args.seed;
+config.proxy = args.proxy;
 
 new loop(config).run();
