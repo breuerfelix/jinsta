@@ -7,7 +7,7 @@ import fs from 'fs';
 import {
 	TimelineFeed,
 } from './feeds';
-import logger from './logging';
+import logger, { addLogRotate } from './logging';
 
 class loop {
 	private ig: IgApiClient;
@@ -15,6 +15,9 @@ class loop {
 	private session: session;
 
 	constructor(config: Config) {
+		// must be the first thing in the application start
+		addLogRotate(config.workspacePath);
+
 		// TODO check if config is valid
 		if (!fs.existsSync(config.workspacePath)) fs.mkdirSync(config.workspacePath);
 		// use username as seed as default
