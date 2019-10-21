@@ -40,7 +40,7 @@ var args = require('yargs')
 			describe: 'Force to reset the Session',
 		},
 		'likeLimit': {
-			type: 'string',
+			type: 'number',
 			default: null,
 			describe: 'Like limit when the bot should exit',
 		},
