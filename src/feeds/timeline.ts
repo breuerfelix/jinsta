@@ -28,7 +28,10 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	protected isViolate(media: TimelineMedia): boolean {
 		if (media.caption == null) return false;
 		for (const key of this.config.blacklist) {
-			if (media.caption.text.includes(key)) return true;
+			if (media.caption.text.includes(key)) {
+				logger.info('description is matching blacklisted word: %s', key);
+				return true;
+			}
 		}
 
 		return false;

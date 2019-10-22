@@ -39,12 +39,11 @@ class Config {
 	];
 	public blacklist = [
 		'porn', 'naked', 'sex', 'vagina', 'penis', 'nude',
-		'tits', 'boobs', 'like4like', 'nsfw', 'sexy', 'hot',
+		'tits', 'boobs', 'like4like', 'nsfw', 'sexy', 'drugs',
 		'babe', 'binary', 'bitcoin', 'crypto', 'forex', 'dick',
 		'squirt', 'gay', 'homo', 'nazi', 'jew', 'judaism',
 		'muslim', 'islam', 'hijab', 'niqab', 'farright',
 		'rightwing', 'conservative', 'death', 'racist', 'cbd',
-		'drugs',
 	];
 
 	constructor(
