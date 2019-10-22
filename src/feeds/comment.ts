@@ -58,7 +58,9 @@ class CommentFeed extends Feed<CommentMedia> {
 		return interest;
 	}
 
+	/* eslint-disable */
 	protected async likeMedia(media: CommentMedia): Promise<void> {
+	/* eslint-enable */
 		logger.info('comment liking currently not supported');
 		// TODO remove when function is implemented
 		store.change(({ imageLikes }) => ({ imageLikes: imageLikes-- }));

@@ -26,9 +26,7 @@
     "deploy:beta": "np prerelease --tag=beta --no-release-draft --no-publish --any-branch"
   },
   "pre-commit": [
-    "lint:fix",
-    "lint",
-    "type-check"
+    "lint:fix"
   ],
   "repository": "github:breuerfelix/jinsta",
   "keywords": [],

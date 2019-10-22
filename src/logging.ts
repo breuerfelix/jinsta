@@ -1,9 +1,9 @@
-import winston, { Logger } from 'winston';
+import winston from 'winston';
 import { format } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 
-const fileLogFormat = winston.format.printf(({ level, message, label, timestamp }) => {
+const fileLogFormat = winston.format.printf(({ level, message, timestamp }) => {
 	return `${timestamp} ${level}: ${message}`;
 });
 
