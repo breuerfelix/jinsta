@@ -2,7 +2,7 @@
 
 special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy) !! (:
 
-## getting started (basic, see advanced configuration for more examples)
+## getting started basic
 
 - install [nodejs](https://nodejs.org)
 - open the terminal
@@ -19,6 +19,7 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 ## advanced configuration
 
 ### example index.js 
+
 - install [nodejs](https://nodejs.org)
 - open the terminal and create a new folder
 	- the name the folder must be different than 'jinsta'
@@ -47,7 +48,7 @@ config.keywords = [ 'vegan', 'climate', 'sports' ];
 new loop(config).run();
 ```
 
-- `node index.js`
+- `node index.js` to start the bot
 
 ### proxy
 
@@ -68,7 +69,11 @@ IG_USERNAME=instagram_username
 IG_PASSWORD=instagram_password
 ```
 
-- `npm run dev`
+- `npm run dev` to start the bot
+
+## additional information / helpful another projects
+
+- [jinsta_starter](https://github.com/demaya/jinsta_starter/): helpful for scheduling jinsta, e.g. on a raspberry pi at home
 
 ## why did we stop working on instapy ?
 
@@ -103,9 +108,6 @@ this should just visualize the basic idea behind the new algorithm.
 
 if you got any ideas or improvements, feel free to write some issues or contact me at discord!  
 since this is in pre alpha, there is alot to improve (:
-
-## additional information / helpful another projects
-- [jinsta_starter](https://github.com/demaya/jinsta_starter/): helpful for scheduling jinsta, e.g. on a raspberry pi at home
 
 ---
 
