@@ -39,7 +39,10 @@ class TimelineFeed extends Feed<TimelineMedia> {
 
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {
 		logger.info('getting more timeline items for user \'%s\'', this.config.username);
-		return await this.timeline.items();
+		const items = await this.timeline.items();
+		const ids = items.map((item: TimelineMedia) => item.id);
+		logger.info('item ids from the current server call: %s', ids);
+		return items;
 	}
 
 	protected getInteractionInterest(media: TimelineMedia): number {
