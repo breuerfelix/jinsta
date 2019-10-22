@@ -1,6 +1,10 @@
 import createStore from 'unistore';
 import { Observable } from 'rxjs'; 
-import { publishReplay, pluck, filter } from 'rxjs/operators';
+import {
+	publishReplay,
+	pluck, filter,
+	distinctUntilChanged,
+} from 'rxjs/operators';
 
 // types
 interface State {
@@ -29,10 +33,10 @@ const store: UniStoreObservable = Observable.create((observer: any) => {
 store.connect(); // make it a hot observable
 
 // define store functions
-store.setState = org_store.setState;
-store.getState = org_store.getState as () => State;
-store.change = (fn: changeFunction): void => store.setState(fn(store.getState()));
-store.pluck = (key: string): Observable<any> => store.pipe(pluck(key));
+store.setState = (newState: Partial<State>): void => org_store.setState(newState);
+store.getState = (): State => org_store.getState() as State;
+store.change = (fn: changeFunction): void => org_store.setState(fn(org_store.getState() as State));
+store.pluck = (key: string): Observable<any> => store.pipe(pluck(key), distinctUntilChanged());
 
 const initState: Partial<State> = {
 	imageLikes: 0,
@@ -45,6 +49,7 @@ store.setState(initState);
 const like$ = store.pipe(
 	pluck('like$'),
 	filter(media => !!media),
+	distinctUntilChanged(),
 );
 
 export {

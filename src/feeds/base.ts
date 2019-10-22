@@ -39,7 +39,7 @@ abstract class Feed<T> {
 
 				logger.info('new media count: %d', this.media.length);
 
-				store.change(({ serverCalls }) => ({ serverCalls: serverCalls++ }));
+				store.change(({ serverCalls }) => ({ serverCalls: serverCalls + 1 }));
 			}
 
 			if (this.progress >= this.media.length) {
@@ -73,8 +73,8 @@ abstract class Feed<T> {
 					logger.info('like media');
 					await this.likeMedia(med);
 
-					store.change(({ imageLikes }) => ({ imageLikes: imageLikes++ }));
-					store.change(({ serverCalls }) => ({ serverCalls: serverCalls++ }));
+					store.change(({ imageLikes }) => ({ imageLikes: imageLikes + 1 }));
+					store.change(({ serverCalls }) => ({ serverCalls: serverCalls + 1 }));
 					store.setState({ like$: med });
 				}
 

@@ -63,8 +63,8 @@ class CommentFeed extends Feed<CommentMedia> {
 	/* eslint-enable */
 		logger.info('comment liking currently not supported');
 		// TODO remove when function is implemented
-		store.change(({ imageLikes }) => ({ imageLikes: imageLikes-- }));
-		store.change(({ serverCalls }) => ({ serverCalls: serverCalls-- }));
+		store.change(({ imageLikes }) => ({ imageLikes: imageLikes - 1 }));
+		store.change(({ serverCalls }) => ({ serverCalls: serverCalls - 1 }));
 	}
 
 	alreadyLikedMedia = (media: CommentMedia): boolean => media.has_liked_comment;
