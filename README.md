@@ -2,7 +2,7 @@
 
 special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy) !! (:
 
-## getting started
+## getting started (basic, see advanced configuration for more examples)
 
 - install [nodejs](https://nodejs.org)
 - open the terminal
@@ -18,6 +18,7 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 
 ## advanced configuration
 
+### example index.js 
 - install [nodejs](https://nodejs.org)
 - open the terminal and create a new folder
 	- the name the folder must be different than 'jinsta'
@@ -47,6 +48,14 @@ new loop(config).run();
 ```
 
 - `node index.js`
+
+### proxy
+
+if you're running jinsta on a server in the internet or in a cloud environment it could be really helpful to use a proxy, so it is not that easy for instagram to catch you up. if you are running jinsta from home this may not be needed.
+
+there are two ways to achieve this:
+1. append `--proxy ip.ip.ip.ip:port` on the commandline
+2. set following configuration in the advanced configuration:  `config.proxy = 'ip.ip.ip.ip:port'` 
 
 ## contribute
 
@@ -94,6 +103,9 @@ this should just visualize the basic idea behind the new algorithm.
 
 if you got any ideas or improvements, feel free to write some issues or contact me at discord!  
 since this is in pre alpha, there is alot to improve (:
+
+## additional information / helpful another projects
+- [jinsta_starter](https://github.com/demaya/jinsta_starter/): helpful for scheduling jinsta, e.g. on a raspberry pi at home
 
 ---
 
