@@ -15,6 +15,7 @@ interface TimelineMedia {
 
 class TimelineFeed extends Feed<TimelineMedia> {
 	private timeline: any;
+	private allItemIDs: string[] = [];
 
 	constructor(
 		client: IgApiClient,
@@ -40,8 +41,26 @@ class TimelineFeed extends Feed<TimelineMedia> {
 	protected async getMoreMedia(): Promise<TimelineMedia[]> {
 		logger.info('getting more timeline items for user \'%s\'', this.config.username);
 		const items = await this.timeline.items();
+
+		// filter out
 		const ids = items.map((item: TimelineMedia) => item.id);
-		logger.info('item ids from the current server call: %s', ids);
+
+		let oldIds = 0;
+		for (const id of ids) {
+			if (this.allItemIDs.find(x => x == id)) oldIds = oldIds + 1;
+		}
+
+		if (items.length == oldIds) {
+			logger.warn('no new timeline media available for this account!');
+			process.exit(0);
+		}
+
+		if (oldIds > 0) {
+			logger.info('already fetched %d items', oldIds);
+		}
+
+		this.allItemIDs.push(...ids);
+
 		return items;
 	}
 
