@@ -28,7 +28,7 @@ const addLogRotate = (workspace: string): void => {
 		maxFiles: '7d',
 	});
 
-	logger.transports.push(logRotate);
+	logger.add(logRotate);
 };
 
 export {
