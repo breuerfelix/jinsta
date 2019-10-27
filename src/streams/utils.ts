@@ -1,6 +1,6 @@
 import logger from '../core/logging';
 
-export const blacklistFilter = (text: string, blacklist: string[]): boolean => {
+export function blacklistFilter(text: string, blacklist: string[]): boolean {
 	for (const key of blacklist) {
 		if (text.includes(key)) {
 			logger.info('description is matching blacklisted word: %s', key);
@@ -9,9 +9,9 @@ export const blacklistFilter = (text: string, blacklist: string[]): boolean => {
 	}
 
 	return true;
-};
+}
 
-export const interestRate = (text: string, keywords: string[], base: number, inc: number): number => {
+export function interestRate(text: string, keywords: string[], base: number, inc: number): number {
 	let interest = base;
 
 	for (const key of keywords) {
@@ -19,5 +19,4 @@ export const interestRate = (text: string, keywords: string[], base: number, inc
 	}
 
 	return interest;
-};
-
+}

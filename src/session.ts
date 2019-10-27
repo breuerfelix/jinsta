@@ -16,7 +16,7 @@ interface sessionFile {
 	restore: boolean;
 }
 
-const parseSession = (filepath: string): sessionFile => {
+function parseSession(filepath: string): sessionFile {
 	let cookie = null;
 	let user = null;
 	let seed = null;
@@ -40,19 +40,18 @@ const parseSession = (filepath: string): sessionFile => {
 	};
 
 	return config;
-};
+}
 
-const restore = (config: Config): void => {
+function restore(config: Config): void {
 	// try to parse session from file
 	const additionalConfig = parseSession(config.sessionPath);
 	config.restore = additionalConfig.restore;
 	config.cookie = additionalConfig.cookie;
 	config.seed = additionalConfig.seed;
 	config.user = additionalConfig.user;
-};
+}
 
-
-const solveChallenge = async (client: IgApiClient): Promise<User> => {
+async function solveChallenge(client: IgApiClient): Promise<User> {
 	await client.challenge.auto(true); // Requesting sms-code or click "It was me" button
 	const { code } = await inquirer.prompt([{
 		type: 'input',
@@ -62,9 +61,9 @@ const solveChallenge = async (client: IgApiClient): Promise<User> => {
 
 	const res = await client.challenge.sendSecurityCode(code);
 	return res.logged_in_user!;
-};
+}
 
-const twoFactorLogin = async (client: IgApiClient, config: Config, err: any): Promise<User> => {
+async function twoFactorLogin(client: IgApiClient, config: Config, err: any): Promise<User> {
 	const twoFactorIdentifier = err.response.body.two_factor_info.two_factor_identifier;
 	if (!twoFactorIdentifier) {
 		throw 'Unable to login, no 2fa identifier found';
@@ -87,9 +86,9 @@ const twoFactorLogin = async (client: IgApiClient, config: Config, err: any): Pr
 		verificationMethod: '1', // '1' = SMS (default), '0' = OTP
 		trustThisDevice: '1', // Can be omitted as '1' is used by default
 	});
-};
+}
 
-const saveSession = async (client: IgApiClient, config: Config): Promise<void> => {
+async function saveSession(client: IgApiClient, config: Config): Promise<void> {
 	const cookie = await client.state.serializeCookieJar();
 	const { sessionPath, user, seed } = config;
 	fs.writeFile(
@@ -97,9 +96,9 @@ const saveSession = async (client: IgApiClient, config: Config): Promise<void> =
 		JSON.stringify({ cookie, seed, user }),
 		'utf-8', err => err ? logger.error(err) : void 0,
 	);
-};
+}
 
-const login = async (client: IgApiClient, config: Config): Promise<User> => {
+async function login(client: IgApiClient, config: Config): Promise<User> {
 	if (!config.reset) restore(config);
 
 	client.state.generateDevice(config.seed);
@@ -133,6 +132,6 @@ const login = async (client: IgApiClient, config: Config): Promise<User> => {
 
 	client.simulate.postLoginFlow(); // dont await here
 	return user!;
-};
+}
 
 export default login;
