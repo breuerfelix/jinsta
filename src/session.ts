@@ -42,7 +42,7 @@ const parseSession = (filepath: string): sessionFile => {
 	return config;
 };
 
-const restore = (config: Config) => {
+const restore = (config: Config): void => {
 	// try to parse session from file
 	const additionalConfig = parseSession(config.sessionPath);
 	config.restore = additionalConfig.restore;
