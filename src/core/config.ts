@@ -31,7 +31,7 @@ class Config {
 	public dropFeedChance = .2;
 
 	// program will exit when reached
-	public likeLimit = 3; // 0 for disable
+	public likeLimit = 35; // 0 for disable
 
 	public keywords = [
 		'climate', 'sport', 'vegan', 'world', 'animal',
@@ -57,7 +57,6 @@ class Config {
 		this.sessionPath = path.resolve(this.workspacePath, 'session.json');
 	}
 }
-
 
 export {
 	Config,
