@@ -1,12 +1,9 @@
-import jinsta from './loop';
-import { Config } from './config';
-import { store, like$ } from './store';
+import jinsta from './main';
+import { Config } from './core/config';
 
 export default jinsta;
 
 export {
 	jinsta,
 	Config,
-	store,
-	like$,
 };

@@ -2,6 +2,8 @@
 
 special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating [instapy](https://github.com/timgrossmann/instapy) !! (:
 
+check out our [discord channel](https://discord.gg/FDETsht) and chat me there to get an invite for the channel :)
+
 ## getting started basic
 
 - install [nodejs](https://nodejs.org)

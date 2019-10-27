@@ -11,7 +11,11 @@ const logger = winston.createLogger({
 	levels: winston.config.npm.levels,
 	transports: [
 		new winston.transports.Console({
-			format: format.combine(winston.format.splat(), winston.format.cli()),
+			format: format.combine(
+				winston.format.splat(),
+				winston.format.cli(),
+				winston.format.align(),
+			),
 			level: 'info',
 		}),
 	],
