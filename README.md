@@ -32,7 +32,7 @@ check out our [discord channel](https://discord.gg/FDETsht) and chat me there to
 ```js
 var jinsta = require('jinsta');
 
-var loop = jinsta.default;
+var run = jinsta.default;
 var Config = jinsta.Config;
 
 var config = new Config(
@@ -41,13 +41,13 @@ var config = new Config(
 	'workspace_path' // like './jinsta_data'
 );
 
-// have a look at https://github.com/breuerfelix/jinsta/blob/master/src/config.ts for an example
+// have a look at https://github.com/breuerfelix/jinsta/blob/master/src/core/config.ts for an example
 config.like_limit = 30;
 // you can edit every property you want
 // just do it like we change the keywords here
 config.keywords = [ 'vegan', 'climate', 'sports' ];
 
-new loop(config).run();
+run(config);
 ```
 
 - `node index.js` to start the bot
