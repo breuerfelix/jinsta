@@ -21,7 +21,7 @@ const logger = winston.createLogger({
 	],
 });
 
-const addLogRotate = (workspace: string): void => {
+function addLogRotate(workspace: string): void {
 	const logRotate = new DailyRotateFile({
 		format: format.combine(winston.format.splat(), winston.format.timestamp(), winston.format.padLevels(), fileLogFormat),
 		level: 'debug',
@@ -33,7 +33,7 @@ const addLogRotate = (workspace: string): void => {
 	});
 
 	logger.add(logRotate);
-};
+}
 
 export {
 	addLogRotate,
