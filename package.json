@@ -29,7 +29,7 @@
     "lint:fix"
   ],
   "repository": "github:breuerfelix/jinsta",
-  "keywords": [],
+  "keywords": ["instagram", "automation", "typescript", "flow", "bot"],
   "author": "Felix Breuer",
   "license": "MIT",
   "bugs": {
