@@ -3,11 +3,11 @@ import {
 	IgCheckpointError,
 	IgLoginTwoFactorRequiredError,
 } from 'instagram-private-api';
-import { Config } from './config';
+import { Config } from './core/config';
 import { User } from './types';
 import inquirer from 'inquirer';
 import fs from 'fs';
-import logger from './logging';
+import logger from './core/logging';
 
 interface sessionFile {
 	cookie: any;
@@ -16,132 +16,123 @@ interface sessionFile {
 	restore: boolean;
 }
 
-class session {
-	private ig: IgApiClient;
-	private config: Config;
+const parseSession = (filepath: string): sessionFile => {
+	let cookie = null;
+	let user = null;
+	let seed = null;
+	let restore = false;
 
-	constructor(ig: IgApiClient, config: Config) {
-		this.ig = ig;
-		this.config = config;
+	if (fs.existsSync(filepath)) {
+		const content = fs.readFileSync(filepath, 'utf-8');
+		const data = JSON.parse(content);
 
-		if (this.config.reset) return; // do not restore
-		// try to parse session from file
-		const additionalConfig = this.parseSession(this.config.sessionPath);
-		this.config.restore = additionalConfig.restore;
-		this.config.cookie = additionalConfig.cookie;
-		this.config.seed = additionalConfig.seed;
-		this.config.user = additionalConfig.user;
+		cookie = data.cookie;
+		seed = data.seed;
+		user = data.user;
+		restore = true;
 	}
 
-	async login(): Promise<User> {
-		this.ig.state.generateDevice(this.config.seed);
-		this.ig.request.end$.subscribe(this.saveSession.bind(this));
+	const config = {
+		cookie,
+		user,
+		seed,
+		restore,
+	};
 
-		if (this.config.restore) {
-			await this.ig.state.deserializeCookieJar(this.config.cookie);
+	return config;
+};
 
-			try {
-				// check if session is still valid
-				const tl = this.ig.feed.timeline('warm_start_fetch');
-				await tl.items();
-				return this.config.user;
-			} catch {
-				logger.info('session expired, going for relogin');
-			}
-		}
+const restore = (config: Config): void => {
+	// try to parse session from file
+	const additionalConfig = parseSession(config.sessionPath);
+	config.restore = additionalConfig.restore;
+	config.cookie = additionalConfig.cookie;
+	config.seed = additionalConfig.seed;
+	config.user = additionalConfig.user;
+};
 
-		await this.ig.simulate.preLoginFlow();
-		let user = null;
+
+const solveChallenge = async (client: IgApiClient): Promise<User> => {
+	await client.challenge.auto(true); // Requesting sms-code or click "It was me" button
+	const { code } = await inquirer.prompt([{
+		type: 'input',
+		name: 'code',
+		message: 'Enter sms / email code:',
+	}]);
+
+	const res = await client.challenge.sendSecurityCode(code);
+	return res.logged_in_user!;
+};
+
+const twoFactorLogin = async (client: IgApiClient, config: Config, err: any): Promise<User> => {
+	const twoFactorIdentifier = err.response.body.two_factor_info.two_factor_identifier;
+	if (!twoFactorIdentifier) {
+		throw 'Unable to login, no 2fa identifier found';
+	}
+	// At this point a code should have been received via SMS
+	// Get SMS code from stdin
+	const { code } = await inquirer.prompt([
+		{
+			type: 'input',
+			name: 'code',
+			message: 'Enter sms code:',
+		},
+	]);
+
+	// Use the code to finish the login process
+	return await client.account.twoFactorLogin({
+		username: config.username,
+		verificationCode: code,
+		twoFactorIdentifier,
+		verificationMethod: '1', // '1' = SMS (default), '0' = OTP
+		trustThisDevice: '1', // Can be omitted as '1' is used by default
+	});
+};
+
+const saveSession = async (client: IgApiClient, config: Config): Promise<void> => {
+	const cookie = await client.state.serializeCookieJar();
+	const { sessionPath, user, seed } = config;
+	fs.writeFile(
+		sessionPath,
+		JSON.stringify({ cookie, seed, user }),
+		'utf-8', err => err ? logger.error(err) : void 0,
+	);
+};
+
+const login = async (client: IgApiClient, config: Config): Promise<User> => {
+	if (!config.reset) restore(config);
+
+	client.state.generateDevice(config.seed);
+	client.request.end$.subscribe(() => saveSession(client, config));
+
+	if (config.restore) {
+		await client.state.deserializeCookieJar(config.cookie);
 
 		try {
-			user = await this.ig.account.login(this.config.username, this.config.password);
-		} catch (e) {
-			if (e instanceof IgCheckpointError) {
-				user = await this.solveChallenge();
-			} else if (e instanceof IgLoginTwoFactorRequiredError) {
-				user = await this.twoFactorLogin(e);
-			}
+			// check if session is still valid
+			const tl = client.feed.timeline('warm_start_fetch');
+			await tl.items();
+			return config.user;
+		} catch {
+			logger.info('session expired, going for relogin');
 		}
-
-		this.ig.simulate.postLoginFlow(); // dont await here
-		this.config.user = user;
-		return user!;
 	}
 
-	async solveChallenge(): Promise<User> {
-		await this.ig.challenge.auto(true); // Requesting sms-code or click "It was me" button
-		const { code } = await inquirer.prompt([
-			{
-				type: 'input',
-				name: 'code',
-				message: 'Enter sms / email code:',
-			},
-		]);
+	await client.simulate.preLoginFlow();
+	let user = null;
 
-		const res = await this.ig.challenge.sendSecurityCode(code);
-		return res.logged_in_user!;
-	}
-
-	async twoFactorLogin(err: any): Promise<User> {
-		const twoFactorIdentifier = err.response.body.two_factor_info.two_factor_identifier;
-		if (!twoFactorIdentifier) {
-			throw 'Unable to login, no 2fa identifier found';
+	try {
+		user = await client.account.login(config.username, config.password);
+	} catch (e) {
+		if (e instanceof IgCheckpointError) {
+			user = await solveChallenge(client);
+		} else if (e instanceof IgLoginTwoFactorRequiredError) {
+			user = await twoFactorLogin(client, config, e);
 		}
-		// At this point a code should have been received via SMS
-		// Get SMS code from stdin
-		const { code } = await inquirer.prompt([
-			{
-				type: 'input',
-				name: 'code',
-				message: 'Enter sms code:',
-			},
-		]);
-
-		// Use the code to finish the login process
-		return await this.ig.account.twoFactorLogin({
-			username: this.config.username,
-			verificationCode: code,
-			twoFactorIdentifier,
-			verificationMethod: '1', // '1' = SMS (default), '0' = OTP
-			trustThisDevice: '1', // Can be omitted as '1' is used by default
-		});
 	}
 
-	async saveSession(): Promise<void> {
-		const cookie = await this.ig.state.serializeCookieJar();
-		const { sessionPath, user, seed } = this.config;
-		fs.writeFile(
-			sessionPath,
-			JSON.stringify({ cookie, seed, user }),
-			'utf-8', err => err ? logger.error(err) : void 0,
-		);
-	}
+	client.simulate.postLoginFlow(); // dont await here
+	return user!;
+};
 
-	parseSession(filepath: string): sessionFile {
-		let cookie = null;
-		let user = null;
-		let seed = null;
-		let restore = false;
-
-		if (fs.existsSync(filepath)) {
-			const content = fs.readFileSync(filepath, 'utf-8');
-			const data = JSON.parse(content);
-
-			cookie = data.cookie;
-			seed = data.seed;
-			user = data.user;
-			restore = true;
-		}
-
-		const config = {
-			cookie,
-			user,
-			seed,
-			restore,
-		};
-
-		return config;
-	}
-}
-
-export default session;
+export default login;
