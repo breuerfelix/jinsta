@@ -7,7 +7,7 @@ import { liked$ } from './streams/like';
 import { store } from './core/store';
 import { timeline } from './features';
 
-const setup = (config: Config): IgApiClient => {
+function setup(config: Config): IgApiClient {
 	// must be the first thing in the application start
 	addLogRotate(config.workspacePath);
 
@@ -31,9 +31,9 @@ const setup = (config: Config): IgApiClient => {
 	}
 
 	return client;
-};
+}
 
-const run = async (config: Config): Promise<void> => {
+async function run(config: Config): Promise<void> {
 	const client = setup(config);
 
 	config.user = await login(client, config);
@@ -50,6 +50,6 @@ const run = async (config: Config): Promise<void> => {
 
 	// TODO add information about the progress
 	logger.info('finished, exiting');
-};
+}
 
 export default run;

@@ -1,14 +1,14 @@
 import { IgApiClient } from 'instagram-private-api';
 import { Config } from '../core/config';
-import { TimelineFeedResponseMedia_or_ad } from 'instagram-private-api/dist/responses';
 import { media$ } from '../streams/like';
 import { sleep } from '../core/utils';
 import logger from '../core/logging';
 import { addServerCalls } from '../core/store';
 
-const timeline = async (client: IgApiClient, config: Config): Promise<void> => {
+async function timeline (client: IgApiClient, config: Config): Promise<void> {
 	const allMediaIDs: string[] = [];
 	const running = true;
+	let progress = 1;
 
 	const timeline = client.feed.timeline('pagination');
 
@@ -26,11 +26,13 @@ const timeline = async (client: IgApiClient, config: Config): Promise<void> => {
 		if (!newItems.length) break;
 
 		for (const item of newItems) {
-			//logger.info('next media: %o', item);
+			logger.info('current progress: %d / %d', progress, allMediaIDs.length);
 			media$.next(item);
 			await sleep(3);
+
+			progress++;
 		}
 	}
-};
+}
 
 export default timeline;
