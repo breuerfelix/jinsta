@@ -10,7 +10,7 @@ import { Config } from './config';
 
 interface State {
 	imageLikes: number;
-	serverCalls: number;
+	serverCalls: number; // TODO add a limit for this
 
 	config: Config;
 	client: IgApiClient;
