@@ -1,5 +1,4 @@
-import loop from './src';
-import { Config } from './src';
+import { jinsta, Config } from './src';
 
 require('dotenv').config();
 
@@ -12,4 +11,4 @@ const config = new Config(
 	workspace,
 );
 
-new loop(config).run();
+jinsta(config);

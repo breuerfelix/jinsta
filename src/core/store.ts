@@ -1,16 +1,19 @@
 import createStore from 'unistore';
+import { IgApiClient } from 'instagram-private-api';
 import { Observable } from 'rxjs'; 
 import {
 	publishReplay,
-	pluck, filter,
+	pluck,
 	distinctUntilChanged,
 } from 'rxjs/operators';
+import { Config } from './config';
 
-// types
 interface State {
 	imageLikes: number;
 	serverCalls: number;
-	like$: any; // stream of liked media
+
+	config: Config;
+	client: IgApiClient;
 }
 
 type changeFunction = (state: State) => Partial<State>;
@@ -23,6 +26,7 @@ interface UniStoreObservable extends Observable<State> {
 	pluck: (key: string) => Observable<any>;
 }
 
+// TODO without unistore
 const org_store = createStore();
 const store: UniStoreObservable = Observable.create((observer: any) => {
 	org_store.subscribe((state: any) => {
@@ -45,16 +49,12 @@ const initState: Partial<State> = {
 
 store.setState(initState);
 
-// additional streams
-const like$ = store.pipe(
-	pluck('like$'),
-	filter(media => !!media),
-	distinctUntilChanged(),
-);
+// useful functions
+const addServerCalls = (amount = 1): void => store.change(({ serverCalls }) => ({ serverCalls: serverCalls + amount }));
 
 export {
 	store,
 	State,
 	UniStoreObservable,
-	like$,
+	addServerCalls,
 };
