@@ -27,10 +27,17 @@ export const like$ = media$.pipe(
 		return true;
 	}),
 	filter(media => !media.has_liked),
-	// TODO add filter if this is an ad
 	withLatestFrom(store.pluck('config')),
-	filter(([{ caption: { text } }, { blacklist }]) => blacklistFilter(text, blacklist)),
-	filter(([{ caption: { text } }, { keywords, baseInterest, interestInc }]) => chance(interestRate(text, keywords, baseInterest, interestInc))),
+	filter(([media, { blacklist }]) => {
+		const { caption = { text: '' } } = media;
+		const { text } = caption;
+		return blacklistFilter(text, blacklist);
+	}),
+	filter(([media, { keywords, baseInterest, interestInc }]) => {
+		const { caption = { text: '' } } = media;
+		const { text } = caption;
+		return chance(interestRate(text, keywords, baseInterest, interestInc));
+	}),
 	share(),
 );
 
