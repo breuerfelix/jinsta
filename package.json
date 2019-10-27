@@ -29,7 +29,13 @@
     "lint:fix"
   ],
   "repository": "github:breuerfelix/jinsta",
-  "keywords": ["instagram", "automation", "typescript", "flow", "bot"],
+  "keywords": [
+    "instagram",
+    "automation",
+    "typescript",
+    "flow",
+    "bot"
+  ],
   "author": "Felix Breuer",
   "license": "MIT",
   "bugs": {
@@ -64,6 +70,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.3",
+    "big-integer": "^1.6.47",
     "inquirer": "^7.0.0",
     "instagram-private-api": "^1.31.0",
     "rxjs": "^6.5.3",

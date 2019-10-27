@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { TimelineFeedResponseMedia_or_ad } from 'instagram-private-api/dist/responses';
-import { chance } from '../core/utils';
+import { chance, convertIDtoPost } from '../core/utils';
 import { store } from '../core/store';
 import {
 	withLatestFrom,
@@ -65,7 +65,7 @@ export const liked$ = like$.pipe(
 	map(([{ media, response, config }, imageLikes]) => ({ media, response, config, imageLikes })),
 
 	tap(({ media, response, config, imageLikes }) => {
-		logger.info('liked %d / %d - media: %s - response: %o', imageLikes + 1, config.likeLimit, media.id, response);
+		logger.info('liked %d / %d - media: %s - response: %o', imageLikes + 1, config.likeLimit, convertIDtoPost(media.id), response);
 		// increment image likes
 		store.setState({ imageLikes: imageLikes + 1 });
 	}),
