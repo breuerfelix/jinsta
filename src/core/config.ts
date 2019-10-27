@@ -1,5 +1,5 @@
 import path from 'path';
-import { User } from './types';
+import { User } from '../types';
 
 class Config {
 	public username: string;
@@ -18,8 +18,8 @@ class Config {
 	public sessionPath: string;
 
 	// application config
-	public baseInterest = .05;
-	public interestInc = .2; // should be adjusted if there are more / less keywords
+	public baseInterest = .2;
+	public interestInc = .3; // should be adjusted if there are more / less keywords
 
 	public mediaDelay = 3;
 
@@ -31,7 +31,7 @@ class Config {
 	public dropFeedChance = .2;
 
 	// program will exit when reached
-	public likeLimit = 35; // 0 for disable
+	public likeLimit = 3; // 0 for disable
 
 	public keywords = [
 		'climate', 'sport', 'vegan', 'world', 'animal',

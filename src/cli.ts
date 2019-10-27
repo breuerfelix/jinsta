@@ -56,10 +56,10 @@ var args = require('yargs')
 	.showHelpOnFail(false, 'whoops, something went wrong! run with --help')
 	.argv;
 
-var jinsta = require('jinsta');
+var expjinsta = require('jinsta');
 
-var loop = jinsta.default;
-var Config = jinsta.Config;
+var jinsta = expjinsta.default;
+var Config = expjinsta.Config;
 
 var config = new Config(
 	args.username,
@@ -72,4 +72,4 @@ config.seed = args.seed;
 config.proxy = args.proxy;
 if (args.likeLimit) config.likeLimit = args.likeLimit;
 
-new loop(config).run();
+jinsta(config);
