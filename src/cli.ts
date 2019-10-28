@@ -39,7 +39,14 @@ var args = require('yargs')
 			default: false,
 			describe: 'Force to reset the Session',
 		},
+		't': {
+			alias: [ 'tags', 'tag' ],
+			type: 'array',
+			default: [],
+			describe: 'Uses given Tags for like by Hashtag',
+		},
 		'likeLimit': {
+			alias: [ 'likelimit', 'like-limit' ],
 			type: 'number',
 			default: null,
 			describe: 'Like limit when the bot should exit',
@@ -70,6 +77,8 @@ var config = new Config(
 config.reset = args.reset;
 config.seed = args.seed;
 config.proxy = args.proxy;
+
+config.tags = args.tags;
 if (args.likeLimit) config.likeLimit = args.likeLimit;
 
 jinsta(config);
