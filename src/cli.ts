@@ -40,7 +40,8 @@ var args = require('yargs')
 			describe: 'Force to reset the Session',
 		},
 		't': {
-			type: 'tags',
+			alias: [ 'tags', 'tag' ],
+			type: 'array',
 			default: [],
 			describe: 'Uses given Tags for like by Hashtag',
 		},
