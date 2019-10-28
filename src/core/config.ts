@@ -33,10 +33,13 @@ class Config {
 	// program will exit when reached
 	public likeLimit = 35; // 0 for disable
 
+	public tags: string[] = [];
+
 	public keywords = [
 		'climate', 'sport', 'vegan', 'world', 'animal',
 		'vegetarian', 'savetheworld',
 	];
+
 	public blacklist = [
 		'porn', 'naked', 'sex', 'vagina', 'penis', 'nude',
 		'tits', 'boobs', 'like4like', 'nsfw', 'sexy', 'drugs',

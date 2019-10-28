@@ -5,7 +5,7 @@ import { IgApiClient } from 'instagram-private-api';
 import fs from 'fs';
 import { liked$ } from './streams/like';
 import { store } from './core/store';
-import { timeline } from './features';
+import { timeline, hashtag } from './features';
 
 function setup(config: Config): IgApiClient {
 	// must be the first thing in the application start
@@ -18,17 +18,6 @@ function setup(config: Config): IgApiClient {
 
 	const client = new IgApiClient();
 	if (config.proxy) client.state.proxyUrl = config.proxy;
-
-	// exit when like limit is reached
-	if (config.likeLimit > 0) {
-		// setup process exit when like limit reached
-		store.pluck('imageLikes').subscribe(likes => {
-			if (likes >= config.likeLimit) {
-				logger.info('like limit reached. exiting process.');
-				process.exit(0);
-			}
-		});
-	}
 
 	return client;
 }
@@ -45,8 +34,13 @@ async function run(config: Config): Promise<void> {
 	// TODO make it hot per default
 	liked$.subscribe();
 
-	// run timeline feed
-	await timeline(client, config);
+	if (config.tags.length) {
+		// run hashtag feed
+		await hashtag(client, config);
+	} else {
+		// run timeline feed
+		await timeline(client, config);
+	}
 
 	// TODO add information about the progress
 	logger.info('finished, exiting');
