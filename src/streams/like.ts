@@ -29,13 +29,13 @@ export const like$ = media$.pipe(
 	filter(media => !media.has_liked),
 	withLatestFrom(store.pluck('config')),
 	filter(([media, { blacklist }]) => {
-		const { caption = { text: '' } } = media;
-		const { text } = caption;
+		if (!media.caption) return true;
+		const { text } = media.caption;
 		return blacklistFilter(text, blacklist);
 	}),
 	filter(([media, { keywords, baseInterest, interestInc }]) => {
-		const { caption = { text: '' } } = media;
-		const { text } = caption;
+		if (!media.caption) return true;
+		const { text } = media.caption;
 		return chance(interestRate(text, keywords, baseInterest, interestInc));
 	}),
 	share(),
