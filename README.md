@@ -60,6 +60,21 @@ there are two ways to achieve this:
 1. append `--proxy ip.ip.ip.ip:port` on the commandline
 2. set following configuration in the advanced configuration:  `config.proxy = 'ip.ip.ip.ip:port'` 
 
+### like by hashtag
+
+the bot will go through all `tags` you entered and like the amount of `likeLimit` for each `tag`.  
+_example:_ tags = vegan sport climate / likeLimit = 10 / => 30 likes in total
+
+**simple:** `jinsta --tags climate vegan sport --likeLimit 10`
+
+**advanced:**  
+```js
+// the bot will like 10 images with the hashtag vegan
+// and then 10 images with the hashtag climate
+config.likeLimit = 10;
+config.tags = ['vegan', 'climate', 'sport'];
+```
+
 ## contribute
 
 - clone this repo
