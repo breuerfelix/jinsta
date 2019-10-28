@@ -46,6 +46,7 @@ var args = require('yargs')
 			describe: 'Uses given Tags for like by Hashtag',
 		},
 		'likeLimit': {
+			alias: [ 'likelimit', 'like-limit' ],
 			type: 'number',
 			default: null,
 			describe: 'Like limit when the bot should exit',
