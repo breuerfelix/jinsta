@@ -42,7 +42,7 @@ var config = new Config(
 );
 
 // have a look at https://github.com/breuerfelix/jinsta/blob/master/src/core/config.ts for an example
-config.like_limit = 30;
+config.likeLimit = 30;
 // you can edit every property you want
 // just do it like we change the keywords here
 config.keywords = [ 'vegan', 'climate', 'sports' ];
