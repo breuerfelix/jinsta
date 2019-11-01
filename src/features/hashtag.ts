@@ -1,9 +1,8 @@
-import { IgApiClient } from "instagram-private-api";
-import { Config } from "../core/config";
-import { mediaFeed, likesForTags } from "./utils";
-import { store } from "../core/store";
-import logger from "../core/logging";
-import { liked$ } from "../streams/like";
+import { IgApiClient } from 'instagram-private-api';
+import { Config } from '../core/config';
+import { mediaFeed, likesForTags } from './utils';
+import { store } from '../core/store';
+import logger from '../core/logging';
 
 async function hashtag(client: IgApiClient, config: Config): Promise<void> {
 	if (config.likeLimit > 0 && config.tags) {
@@ -12,9 +11,9 @@ async function hashtag(client: IgApiClient, config: Config): Promise<void> {
 		let running = false;
 
 		// setup process exit when like limit reached
-		store.pluck("imageLikes").subscribe(likes => {
+		store.pluck('imageLikes').subscribe(likes => {
 			if (likes >= config.likeLimit) {
-				logger.info("like limit reached. exiting process.");
+				logger.info('like limit reached. exiting process.');
 				process.exit(0);
 			}
 
@@ -34,11 +33,11 @@ async function hashtag(client: IgApiClient, config: Config): Promise<void> {
 		for (const tag of config.tags) {
 			running = true;
 			logger.info(
-				"starting hashtag feed for tag: %s. randomized number of likes: %i.",
+				'starting hashtag feed for tag: %s. randomized number of likes: %i.',
 				tag,
 				likeBoundsForTags[currentTagIndex]
 			);
-			await mediaFeed(client, config, client.feed.tags(tag, "recent"), () => running);
+			await mediaFeed(client, config, client.feed.tags(tag, 'recent'), () => running);
 			currentTagIndex++;
 		}
 	}
