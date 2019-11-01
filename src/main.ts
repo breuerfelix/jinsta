@@ -5,7 +5,7 @@ import { IgApiClient } from 'instagram-private-api';
 import fs from 'fs';
 import { liked$ } from './streams/like';
 import { store } from './core/store';
-import { timeline, hashtag } from './features';
+import { timeline, hashtag, story } from './features';
 
 function setup(config: Config): IgApiClient {
 	// must be the first thing in the application start
@@ -32,15 +32,16 @@ async function run(config: Config): Promise<void> {
 
 	// trigger the like pipeline
 	// TODO make it hot per default
-	liked$.subscribe();
+	//liked$.subscribe();
+	await story(client, config);
 
-	if (config.tags.length) {
+	/*if (config.tags.length) {
 		// run hashtag feed
 		await hashtag(client, config);
 	} else {
 		// run timeline feed
 		await timeline(client, config);
-	}
+	}*/
 
 	// TODO add information about the progress
 	logger.info('finished, exiting');
