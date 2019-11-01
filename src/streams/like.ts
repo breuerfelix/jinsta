@@ -61,11 +61,11 @@ export const liked$ = like$.pipe(
 
 			return { media, response, config };
 		} catch {
-			const response = {status: 'not okay', message: 'unable to like a media'}
+			const response = {status: 'not okay', message: 'unable to like a media'};
 			return { media, response, config };
 		}
 	}),
-	filter(({ media, response, config}) => {
+	filter(({ media, response}) => {
 		if (response.status != 'ok') {
 			logger.warn('unable to like media: %o\nresponse: %o', response, media);
 			return false;
