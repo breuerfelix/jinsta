@@ -15,7 +15,7 @@ import logger from '../core/logging';
 
 export const viewStory$ = media$.pipe(
 	filter(media => {
-		logger.warn('Media info: %o', media)
+		logger.warn('Media info: %o', media);
 		// TODO just a test, could be removed if this seems to be true
 		// detecting ads and filter them out
 		if (media.ad_id || media.link) {

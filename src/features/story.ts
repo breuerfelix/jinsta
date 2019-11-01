@@ -1,23 +1,23 @@
-import { IgApiClient } from "instagram-private-api";
-import { Config } from "../core/config";
-import { store } from "../core/store";
-import logger from "../core/logging";
-import { Feed } from "instagram-private-api/dist/core/feed";
-import { StoryServiceInput } from "instagram-private-api/dist/types";
+import { IgApiClient } from 'instagram-private-api';
+import { Config } from '../core/config';
+import { store } from '../core/store';
+import logger from '../core/logging';
+import { Feed } from 'instagram-private-api/dist/core/feed';
+import { StoryServiceInput } from 'instagram-private-api/dist/types';
 
 async function story(client: IgApiClient, config: Config): Promise<void> {
-	logger.info("starting with story feed");
+	logger.info('starting with story feed');
 
-	const storyTrayFeed = client.feed.reelsTray("cold_start");
+	const storyTrayFeed = client.feed.reelsTray('cold_start');
 	let storyTray = await storyTrayFeed.items();
 
 	
-	logger.info("%o",storyTray.find(item=>item.user.username==='gaetanogenovesimaestro'));
+	logger.info('%o',storyTray.find(item=>item.user.username==='gaetanogenovesimaestro'));
 	storyTray = storyTray.filter(
 		(item: any) => item.seen === 0 && item.user.username !== config.username
 	);
 
-	logger.info("%o",storyTray.find(item=>item.user.username==='gaetanogenovesimaestro'));
+	logger.info('%o',storyTray.find(item=>item.user.username==='gaetanogenovesimaestro'));
 
 	const storyMediaFeed = client.feed.reelsMedia({
 		userIds: storyTray.map(item => item.user.pk)
@@ -40,7 +40,7 @@ async function story(client: IgApiClient, config: Config): Promise<void> {
 	}
 	const seenResult = await client.story.seen(storyItems);*/
 
-	logger.info("view stories %o", res);
+	logger.info('view stories %o', res);
 }
 
 export default story;
