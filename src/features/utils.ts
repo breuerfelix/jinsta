@@ -1,10 +1,10 @@
-import { IgApiClient } from "instagram-private-api";
-import { Feed } from "instagram-private-api/dist/core/feed";
-import { Config } from "../core/config";
-import { media$ } from "../streams/like";
-import { sleep } from "../core/utils";
-import logger from "../core/logging";
-import { addServerCalls } from "../core/store";
+import { IgApiClient } from 'instagram-private-api';
+import { Feed } from 'instagram-private-api/dist/core/feed';
+import { Config } from '../core/config';
+import { media$ } from '../streams/like';
+import { sleep } from '../core/utils';
+import logger from '../core/logging';
+import { addServerCalls } from '../core/store';
 
 export async function mediaFeed<T>(
 	client: IgApiClient,
@@ -25,7 +25,7 @@ export async function mediaFeed<T>(
 		allMediaIDs.push(...newItems.map(item => item.id));
 
 		logger.info(
-			"got %d more media for user '%s'",
+			'got %d more media for user \'%s\'',
 			newItems.length,
 			config.username
 		);
@@ -35,7 +35,7 @@ export async function mediaFeed<T>(
 
 		for (const item of newItems) {
 			logger.info(
-				"current progress: %d / %d",
+				'current progress: %d / %d',
 				progress,
 				allMediaIDs.length
 			);
@@ -63,9 +63,9 @@ export function likesForTags(config: Config): Array<number> {
 	const tagsNumber = config.tags ? config.tags.length : 0;
 	if (!likeNumber || !tagsNumber) return [];
 	let sum = 0;
-	let array = [];
-	for (var i = 0; i < tagsNumber; i++) {
-		let current = Math.random() * 100;
+	const array = [];
+	for (let i = 0; i < tagsNumber; i++) {
+		const current = Math.random() * 100;
 		array.push(current);
 		sum += current;
 	}
