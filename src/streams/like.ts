@@ -61,7 +61,7 @@ export const liked$ = like$.pipe(
 
 			return { media, response, config };
 		} catch {
-			const response = {status: 'not okay', message: 'unable to like a media'};
+			const response = {status: 'not okay'};
 			return { media, response, config };
 		}
 	}),
