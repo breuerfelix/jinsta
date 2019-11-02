@@ -1,9 +1,5 @@
-import timeline from './timeline';
-import hashtag from './hashtag';
-import story from './story';
+import timeline from "./timeline";
+import hashtag from "./hashtag";
+import { storyView, storyMassView } from "./story";
 
-export {
-	timeline,
-	hashtag,
-	story
-};
+export { timeline, hashtag, storyView, storyMassView };
