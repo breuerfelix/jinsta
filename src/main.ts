@@ -32,16 +32,18 @@ async function run(config: Config): Promise<void> {
 
 	// trigger the like pipeline
 	// TODO make it hot per default
-	//liked$.subscribe();
+
 	await storyMassView(client, config);
 
-	/*if (config.tags.length) {
+	liked$.subscribe();
+
+	if (config.tags.length) {
 		// run hashtag feed
 		await hashtag(client, config);
 	} else {
 		// run timeline feed
 		await timeline(client, config);
-	}*/
+	}
 
 	// TODO add information about the progress
 	logger.info('finished, exiting');

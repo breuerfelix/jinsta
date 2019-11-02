@@ -1,6 +1,6 @@
-import { IgApiClient } from "instagram-private-api";
-import { Config } from "../core/config";
-import logger from "../core/logging";
+import { IgApiClient } from 'instagram-private-api';
+import { Config } from '../core/config';
+import logger from '../core/logging';
 
 /**
 	This function will attempt to see all the stories of a given user set.
@@ -24,7 +24,7 @@ async function storyView(
 		});
 		let stories = await storyMediaFeed.items();
 		if (!stories.length) {
-			logger.info("selected users has no story!");
+			logger.info('selected users has no story!');
 			return;
 		}
 
@@ -37,15 +37,15 @@ async function storyView(
 		}
 
 		if (!stories.length) {
-			logger.info("no new story to view!");
+			logger.info('no new story to view!');
 			return;
 		}
 
 		//view stories
 		await client.story.seen(stories);
-		logger.info("%i latest stories has been viewed", stories.length);
+		logger.info('%i latest stories has been viewed', stories.length);
 	} catch (error) {
-		logger.warn("error while viewing users stories: %o", error);
+		logger.warn('error while viewing users stories: %o', error);
 		return;
 	}
 }
@@ -57,11 +57,11 @@ async function storyMassView(
 	client: IgApiClient,
 	config: Config
 ): Promise<void> {
-	logger.info("starting vieweing stories from story feed");
+	logger.info('starting vieweing stories from story feed');
 
 	try {
 		// get users who have stories to see in instagram tray (top bar)
-		const storyTrayFeed = client.feed.reelsTray("cold_start");
+		const storyTrayFeed = client.feed.reelsTray('cold_start');
 		let storyTrayItems = await storyTrayFeed.items();
 		storyTrayItems = storyTrayItems.filter(
 			(item: any) =>
@@ -69,7 +69,7 @@ async function storyMassView(
 				item.user.username !== config.username
 		);
 		if (!storyTrayItems.length) {
-			logger.info("no story left to view!");
+			logger.info('no story left to view!');
 			return;
 		}
 
@@ -83,7 +83,7 @@ async function storyMassView(
 		//view stories
 		await storyView(client, userIds, lastSeenPerUser);
 	} catch (error) {
-		logger.warn("error while viewing timeline stories: %o", error);
+		logger.warn('error while viewing timeline stories: %o', error);
 	}
 }
 
