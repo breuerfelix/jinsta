@@ -124,8 +124,7 @@ there are two ways to achieve this:
 
 ### like by hashtag
 
-the bot will go through all `tags` you entered and like the amount of `likeLimit` for each `tag`.  
-_example:_ tags = vegan sport climate / likeLimit = 10 / => 30 likes in total
+the bot will go through all `tags` and split the like limit randomly between given tags.  
 
 **simple:** `jinsta --tags climate vegan sport --likeLimit 10`
 
