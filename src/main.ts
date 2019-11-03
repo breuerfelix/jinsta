@@ -1,13 +1,12 @@
 import { Config } from './core/config';
 import login from './session';
-import logger, { addLogRotate } from './core/logging';
+import { addLogRotate } from './core/logging';
 import { IgApiClient } from 'instagram-private-api';
 import fs from 'fs';
 import { liked$ } from './streams/like';
 import { store } from './core/store';
-import { timeline, hashtag } from './features';
 
-function setup(config: Config): IgApiClient {
+function setupClient(config: Config): IgApiClient {
 	// must be the first thing in the application start
 	addLogRotate(config.workspacePath);
 
@@ -22,10 +21,10 @@ function setup(config: Config): IgApiClient {
 	return client;
 }
 
-async function run(config: Config): Promise<void> {
-	const client = setup(config);
+async function setup(config: Config): Promise<IgApiClient> {
+	const client = setupClient(config);
 
-	config.user = await login(client, config);
+	await login(client, config);
 
 	// push to store
 	store.setState({ config, client });
@@ -34,16 +33,7 @@ async function run(config: Config): Promise<void> {
 	// TODO make it hot per default
 	liked$.subscribe();
 
-	if (config.tags.length) {
-		// run hashtag feed
-		await hashtag(client, config);
-	} else {
-		// run timeline feed
-		await timeline(client, config);
-	}
-
-	// TODO add information about the progress
-	logger.info('finished, exiting');
+	return client;
 }
 
-export default run;
+export default setup;
