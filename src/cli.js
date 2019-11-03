@@ -51,6 +51,12 @@ var args = require('yargs')
 			default: null,
 			describe: 'Like limit when the bot should exit',
 		},
+		'storyMassView': {
+			alias: [ 'storymassview', 'story-mass-view', 'smv' ],
+			type: 'boolean',
+			default: false,
+			describe: 'All your not seen stories will instantly get seen',
+		},
 		'proxy': {
 			type: 'string',
 			default: null,
@@ -63,10 +69,13 @@ var args = require('yargs')
 	.showHelpOnFail(false, 'whoops, something went wrong! run with --help')
 	.argv;
 
-var expjinsta = require('jinsta');
+var jinsta = require('jinsta');
 
-var jinsta = expjinsta.default;
-var Config = expjinsta.Config;
+var setup = jinsta.setup;
+var Config = jinsta.Config;
+var timeline = jinsta.timeline;
+var hashtag = jinsta.hashtag;
+var storyMassView = jinsta.storyMassView;
 
 var config = new Config(
 	args.username,
@@ -81,4 +90,16 @@ config.proxy = args.proxy;
 config.tags = args.tags;
 if (args.likeLimit) config.likeLimit = args.likeLimit;
 
-jinsta(config);
+setup(config).then(function(client) {
+	if (args.storrymassview) {
+		storyMassView(client, config);
+	}
+
+	if (config.tags.length) {
+		// run hashtag feed
+		hashtag(client, config);
+	} else {
+		// run timeline feed
+		timeline(client, config);
+	}
+});
