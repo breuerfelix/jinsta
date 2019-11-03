@@ -131,6 +131,7 @@ async function login(client: IgApiClient, config: Config): Promise<User> {
 	}
 
 	client.simulate.postLoginFlow(); // dont await here
+	config.user = user;
 	return user!;
 }
 
