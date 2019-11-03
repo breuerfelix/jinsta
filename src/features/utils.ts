@@ -10,7 +10,7 @@ export async function mediaFeed<T>(
 	client: IgApiClient,
 	config: Config,
 	feed: Feed<T>,
-	cb = (): boolean => true
+	cb = (): boolean => true,
 ): Promise<void> {
 	const allMediaIDs: string[] = [];
 	let running = true;
@@ -27,7 +27,7 @@ export async function mediaFeed<T>(
 		logger.info(
 			'got %d more media for user \'%s\'',
 			newItems.length,
-			config.username
+			config.username,
 		);
 
 		// exit when no new items are there
@@ -37,8 +37,9 @@ export async function mediaFeed<T>(
 			logger.info(
 				'current progress: %d / %d',
 				progress,
-				allMediaIDs.length
+				allMediaIDs.length,
 			);
+
 			media$.next(item);
 
 			progress++;
@@ -62,12 +63,15 @@ export function likesForTags(config: Config): Array<number> {
 	const likeNumber = config.likeLimit;
 	const tagsNumber = config.tags ? config.tags.length : 0;
 	if (!likeNumber || !tagsNumber) return [];
+
 	let sum = 0;
 	const array = [];
+
 	for (let i = 0; i < tagsNumber; i++) {
 		const current = Math.random() * 100;
-		array.push(current);
 		sum += current;
+		array.push(current);
 	}
+
 	return array.map(i => Math.round((i / sum) * likeNumber));
 }

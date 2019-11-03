@@ -12,6 +12,6 @@ const config = new Config(
 );
 
 //config.tags = ['vegan', 'world'];
-//config.likeLimit = 2;
+//config.likeLimit = 7;
 
 jinsta(config);

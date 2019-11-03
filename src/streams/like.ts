@@ -72,10 +72,7 @@ export const liked$ = like$.pipe(
 	map(([{ media, response, config }, imageLikes]) => ({ media, response, config, imageLikes })),
 
 	tap(({ media, response, config, imageLikes }) => {
-		let limit = config.likeLimit;
-		if (config.tags.length) limit *= config.tags.length;
-
-		logger.info('liked %d / %d - media: %s - response: %o', imageLikes + 1, limit, convertIDtoPost(media.id), response);
+		logger.info('liked %d / %d - media: %s - response: %o', imageLikes + 1, config.likeLimit, convertIDtoPost(media.id), response);
 		// increment image likes
 		store.setState({ imageLikes: imageLikes + 1 });
 	}),
