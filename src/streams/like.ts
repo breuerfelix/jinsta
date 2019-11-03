@@ -46,25 +46,34 @@ export const liked$ = like$.pipe(
 	map(([[media, config], client]) => ([ media, config, client ])),
 	flatMap(async ([media, config, client]) => {
 		const { user } = config;
-		const response = await client.media.like({
-			mediaId: media.id,
-			moduleInfo: {
-				module_name: 'profile',
-				user_id: user.pk,
-				username: user.username,
-			},
-			// d means like by double tap (1), you cant unlike posts with double tap
-			d: chance(.5) ? 0 : 1,
-		});
 
+		let response: any = null;
+
+		try {
+			response = await client.media.like({
+				mediaId: media.id,
+				moduleInfo: {
+					module_name: 'profile',
+					user_id: user.pk,
+					username: user.username,
+				},
+				// d means like by double tap (1), you cant unlike posts with double tap
+				d: chance(.5) ? 0 : 1,
+			});
+		} catch (e) {
+			if (e.message.includes('deleted')) {
+				response.status = 'not okay';
+				response.error = e;
+			} else { throw e; } // throw the error
+		}
+		
 		return { media, response, config };
 	}),
-	tap(({ response }) => {
-		if (response.status != 'ok') {
-			logger.error('like response is not okay: %o', response);
-			logger.error('exiting process');
-			process.exit(1);
-		}
+	filter(({ media, response}) => {
+		if (response.status == 'ok') return true;
+
+		logger.error('unable to like media: %o - response: %o', convertIDtoPost(media.id), response);
+		return false;
 	}),
 
 	// get current likes from store
