@@ -1,9 +1,18 @@
-import jinsta from './main';
+import setup from './main';
 import { Config } from './core/config';
+import {
+	timeline,
+	hashtag,
+	storyMassView,
+} from './features';
 
-export default jinsta;
+export default setup;
 
 export {
-	jinsta,
+	setup,
 	Config,
+
+	timeline,
+	hashtag,
+	storyMassView,
 };

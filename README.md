@@ -29,11 +29,16 @@ check out our [discord channel](https://discord.gg/FDETsht) and chat me there to
 - `npm install jinsta`
 - create a new file `index.js`
 
+#### plain javascript
+
 ```js
 var jinsta = require('jinsta');
 
-var run = jinsta.default;
+var setup = jinsta.default;
 var Config = jinsta.Config;
+var timeline = jinsta.timeline;
+var hashtag = jinsta.hashtag;
+var storyMassView = jinsta.storyMassView;
 
 var config = new Config(
 	'instagram_username',
@@ -41,16 +46,73 @@ var config = new Config(
 	'workspace_path' // like './jinsta_data'
 );
 
+var massview = true;
+
 // have a look at https://github.com/breuerfelix/jinsta/blob/master/src/core/config.ts for an example
 config.likeLimit = 30;
 // you can edit every property you want
 // just do it like we change the keywords here
 config.keywords = [ 'vegan', 'climate', 'sports' ];
 
-run(config);
+setup(config).then(function(client) {
+	if (massview) {
+		storyMassView(client, config);
+	}
+
+	if (config.tags.length) {
+		// run hashtag feed
+		hashtag(client, config);
+	} else {
+		// run timeline feed
+		timeline(client, config);
+	}
+});
 ```
 
 - `node index.js` to start the bot
+
+#### es6 javascript
+
+```js
+import {
+	setup,
+	Config,
+	hashtag,
+	timeline,
+	storyMassView,
+} from 'jinsta';
+
+async function main() {
+	const workspace = './workspace';
+
+	const { IG_USERNAME, IG_PASSWORD } = process.env;
+	const config = new Config(
+		IG_USERNAME,
+		IG_PASSWORD,
+		workspace,
+	);
+
+	const massview = false;
+	//config.tags = ['vegan', 'world'];
+	//config.likeLimit = 10;
+
+	const client = await setup(config);
+
+	if (massview) {
+		await storyMassView(client, config);
+	}
+
+	if (config.tags.length) {
+		// run hashtag feed
+		await hashtag(client, config);
+	} else {
+		// run timeline feed
+		await timeline(client, config);
+	}
+}
+
+main();
+```
 
 ### proxy
 
