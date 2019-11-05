@@ -1,6 +1,7 @@
 import { IgApiClient } from 'instagram-private-api';
 import { Config } from '../core/config';
 import logger from '../core/logging';
+import { sleep, random } from '../core/utils';
 
 /**
 	This function will attempt to see all the stories of a given user set.
@@ -18,31 +19,43 @@ async function storyView(
 	lastSeenPerUser?: any
 ): Promise<void> {
 	//get all the stories from the users picked above
-	const storyMediaFeed = client.feed.reelsMedia({
-		userIds
-	});
-	let stories = await storyMediaFeed.items();
-	if (!stories.length) {
-		logger.info('selected users has no story!');
-		return;
-	}
+	if(!userIds || userIds.length === 0)
+		logger.warn('[STORY] tried to view story without passing an array of user ids');
 
-	if (lastSeenPerUser) {
-		//from all the stories of the user only get those how i've not yet seen.
-		stories = stories.filter(
-			({ taken_at, user: { pk } }) =>
-				!lastSeenPerUser[pk] || taken_at > lastSeenPerUser[pk]
-		);
-	}
+	let currentIndex = 0;
+	let viewedStories = 0;
+	while (currentIndex < userIds.length){
+		const topIndex = random(currentIndex+1, Math.min(currentIndex+6, userIds.length))
 
-	if (!stories.length) {
-		logger.info('no new story to view!');
-		return;
-	}
+		const storyMediaFeed = client.feed.reelsMedia({
+			userIds: userIds.slice(currentIndex, topIndex)
+		});
+		let stories = await storyMediaFeed.items();
+		if (!stories.length) {
+			logger.info('[STORY] selected users has no story!');
+			return;
+		}
 
-	//view stories
-	await client.story.seen(stories);
-	logger.info('%i latest stories has been viewed', stories.length);
+		if (lastSeenPerUser) {
+			//from all the stories of the user only get those how i've not yet seen.
+			stories = stories.filter(
+				({ taken_at, user: { pk } }) =>
+					!lastSeenPerUser[pk] || taken_at > lastSeenPerUser[pk]
+			);
+		}
+
+		if (!stories.length) {
+			logger.info('[STORY] no new story to view!');
+			return;
+		}
+
+		logger.info('[STORY] stories viewed til now:%i. now viewing:%i. still %i users to fetch.',viewedStories, stories.length, Math.max(userIds.length - topIndex, 0))
+		await sleep(random(5,10));
+		//view stories
+		await client.story.seen(stories);
+		viewedStories += stories.length;
+		currentIndex = topIndex+1;
+	}
 }
 
 /**
@@ -52,7 +65,7 @@ async function storyMassView(
 	client: IgApiClient,
 	config: Config
 ): Promise<void> {
-	logger.info('starting vieweing stories from story feed');
+	logger.info('[STORY_MASS_VIEW] starting viewing stories from story feed');
 
 	// get users who have stories to see in instagram tray (top bar)
 	const storyTrayFeed = client.feed.reelsTray('cold_start');
@@ -63,7 +76,7 @@ async function storyMassView(
 			item.user.username !== config.username
 	);
 	if (!storyTrayItems.length) {
-		logger.info('no story left to view!');
+		logger.info('[STORY_MASS_VIEW] no story left to view!');
 		return;
 	}
 

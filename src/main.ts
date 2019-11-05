@@ -5,6 +5,8 @@ import { IgApiClient } from 'instagram-private-api';
 import fs from 'fs';
 import { liked$ } from './streams/like';
 import { store } from './core/store';
+import { storyMassView } from './features/story';
+
 
 function setupClient(config: Config): IgApiClient {
 	// must be the first thing in the application start
@@ -31,6 +33,7 @@ async function setup(config: Config): Promise<IgApiClient> {
 
 	// trigger the like pipeline
 	// TODO make it hot per default
+	await storyMassView(client, config);
 	liked$.subscribe();
 
 	return client;
