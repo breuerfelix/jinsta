@@ -25,7 +25,7 @@ async function storyView(
 	let currentIndex = 0;
 	let viewedStories = 0;
 	while (currentIndex < userIds.length){
-		const topIndex = random(currentIndex+1, Math.min(currentIndex+6, userIds.length))
+		const topIndex = random(currentIndex+1, Math.min(currentIndex+6, userIds.length));
 
 		const storyMediaFeed = client.feed.reelsMedia({
 			userIds: userIds.slice(currentIndex, topIndex)
@@ -49,7 +49,7 @@ async function storyView(
 			return;
 		}
 
-		logger.info('[STORY] stories viewed til now:%i. now viewing:%i. still %i users to fetch.',viewedStories, stories.length, Math.max(userIds.length - topIndex, 0))
+		logger.info('[STORY] stories viewed til now:%i. now viewing:%i. still %i users to fetch.',viewedStories, stories.length, Math.max(userIds.length - topIndex, 0));
 		await sleep(random(5,10));
 		//view stories
 		await client.story.seen(stories);
