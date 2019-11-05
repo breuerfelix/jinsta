@@ -18,7 +18,7 @@ async function main(): Promise<void> {
 		workspace,
 	);
 
-	const massview = true;
+	const massview = false;
 	//config.tags = ['vegan', 'world'];
 	//config.likeLimit = 10;
 
