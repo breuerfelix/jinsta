@@ -1,10 +1,35 @@
 import { IgApiClient } from 'instagram-private-api';
 import { Feed } from 'instagram-private-api/dist/core/feed';
 import { Config } from '../core/config';
-import { media$ } from '../streams/like';
-import { sleep } from '../core/utils';
+import { media$ } from '../streams/media';
+import { sleep, chance } from '../core/utils';
 import logger from '../core/logging';
 import { addServerCalls } from '../core/store';
+
+export const defaultMediaValidator = (media: any, config: Config): boolean => {
+	if (media.ad_id || media.link) {
+		logger.info('[FILTER] media was an ad with id: %s / link: %s', media.ad_id, media.link);
+		return false;
+	}
+	if (media.has_liked) {
+		logger.warn('[FILTER] media was already liked. %s ', media.id);
+		return false;
+	}
+	if (!media.caption) {
+		logger.warn('[FILTER] media didn\'t have a caption. %s ', media.id);
+		return false;
+	}
+
+	const { text } = media.caption;
+	let badWord;
+	if((badWord = config.findBlacklistedWord(text))){
+		logger.warn('[FILTER] media %s matched blacklist word %s', media.id, badWord);
+		return false;
+	}
+
+	const { baseInterest, interestInc } = config;
+	return chance(config.getInterestRate(text, baseInterest, interestInc));
+};
 
 export async function mediaFeed<T>(
 	client: IgApiClient,
@@ -25,7 +50,7 @@ export async function mediaFeed<T>(
 		allMediaIDs.push(...newItems.map(item => item.id));
 
 		logger.info(
-			'got %d more media for user \'%s\'',
+			'[MEDIA FEED] got %d more media for user \'%s\'',
 			newItems.length,
 			config.username,
 		);
@@ -35,12 +60,13 @@ export async function mediaFeed<T>(
 
 		for (const item of newItems) {
 			logger.info(
-				'current progress: %d / %d',
+				'[MEDIA FEED] current progress: %d / %d',
 				progress,
 				allMediaIDs.length,
 			);
 
-			media$.next(item);
+			if(!defaultMediaValidator(item, config))
+				media$.next(item);
 
 			progress++;
 			await sleep(config.mediaDelay);
