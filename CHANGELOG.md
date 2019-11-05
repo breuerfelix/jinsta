@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.0.36] - 2019-11-05
+
+### Added
+- chunking users for story mass view with random delay
+
 ## [0.0.35] - 2019-11-05
 
 ### Added
