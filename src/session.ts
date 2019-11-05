@@ -88,6 +88,7 @@ async function twoFactorLogin(client: IgApiClient, config: Config, err: any): Pr
 	});
 }
 
+// TODO when event system is implemented, save session on exit
 async function saveSession(client: IgApiClient, config: Config): Promise<void> {
 	const cookie = await client.state.serializeCookieJar();
 	const { sessionPath, user, seed } = config;
@@ -96,13 +97,14 @@ async function saveSession(client: IgApiClient, config: Config): Promise<void> {
 		JSON.stringify({ cookie, seed, user }),
 		'utf-8', err => err ? logger.error(err) : void 0,
 	);
+
+	logger.info('session saved');
 }
 
 async function login(client: IgApiClient, config: Config): Promise<User> {
 	if (!config.reset) restore(config);
 
 	client.state.generateDevice(config.seed);
-	client.request.end$.subscribe(() => saveSession(client, config));
 
 	if (config.restore) {
 		await client.state.deserializeCookieJar(config.cookie);
@@ -111,12 +113,14 @@ async function login(client: IgApiClient, config: Config): Promise<User> {
 			// check if session is still valid
 			const tl = client.feed.timeline('warm_start_fetch');
 			await tl.items();
+			logger.info('session restored');
 			return config.user;
 		} catch {
 			logger.info('session expired, going for relogin');
 		}
 	}
 
+	logger.info(`logging in with user: ${config.username} ...`);
 	await client.simulate.preLoginFlow();
 	let user = null;
 
@@ -130,8 +134,13 @@ async function login(client: IgApiClient, config: Config): Promise<User> {
 		}
 	}
 
-	client.simulate.postLoginFlow(); // dont await here
+	await client.simulate.postLoginFlow();
+
 	config.user = user;
+	logger.info(`user: ${config.username} logged in successfully`);
+
+	await saveSession(client, config);
+
 	return user!;
 }
 
