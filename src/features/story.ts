@@ -16,23 +16,28 @@ import { sleep, random } from '../core/utils';
 async function storyView(
 	client: IgApiClient,
 	userIds: number[],
-	lastSeenPerUser?: any
+	lastSeenPerUser?: any,
 ): Promise<void> {
+	const NAMESPACE = 'STORY';
+
 	//get all the stories from the users picked above
-	if(!userIds || userIds.length === 0)
-		logger.warn('[STORY] tried to view story without passing an array of user ids');
+	if(!userIds || userIds.length == 0) {
+		logger.error(`[${NAMESPACE}] tried to view story without passing an array of user ids`);
+		return;
+	}
 
 	let currentIndex = 0;
 	let viewedStories = 0;
-	while (currentIndex < userIds.length){
-		const topIndex = random(currentIndex+1, Math.min(currentIndex+6, userIds.length));
+	while (currentIndex < userIds.length) {
+		const topIndex = random(currentIndex + 1, Math.min(currentIndex + 6, userIds.length));
 
 		const storyMediaFeed = client.feed.reelsMedia({
-			userIds: userIds.slice(currentIndex, topIndex)
+			userIds: userIds.slice(currentIndex, topIndex),
 		});
+
 		let stories = await storyMediaFeed.items();
 		if (!stories.length) {
-			logger.info('[STORY] selected users has no story!');
+			logger.info(`[${NAMESPACE}] no stories for given users available`);
 			return;
 		}
 
@@ -45,16 +50,21 @@ async function storyView(
 		}
 
 		if (!stories.length) {
-			logger.info('[STORY] no new story to view!');
+			logger.info(`[${NAMESPACE}] no new stories to view`);
 			return;
 		}
 
-		logger.info('[STORY] stories viewed til now:%i. now viewing:%i. still %i users to fetch.',viewedStories, stories.length, Math.max(userIds.length - topIndex, 0));
-		await sleep(random(5,10));
-		//view stories
+		let logString = `[${NAMESPACE}] stories already viewed: ${viewedStories}. now viewing: ${stories.length}. `;
+		logString += `still ${Math.max(userIds.length - topIndex, 0)} users to fetch.`;
+		logger.info(logString);
+
+		await sleep(random(5, 10));
+
+		// view stories
 		await client.story.seen(stories);
+
 		viewedStories += stories.length;
-		currentIndex = topIndex+1;
+		currentIndex = topIndex + 1;
 	}
 }
 
@@ -65,7 +75,9 @@ async function storyMassView(
 	client: IgApiClient,
 	config: Config
 ): Promise<void> {
-	logger.info('[STORY_MASS_VIEW] starting viewing stories from story feed');
+	const NAMESPACE = 'STORY MASS VIEW';
+
+	logger.info(`[${NAMESPACE}] starting viewing stories from personal feed`);
 
 	// get users who have stories to see in instagram tray (top bar)
 	const storyTrayFeed = client.feed.reelsTray('cold_start');
@@ -73,21 +85,23 @@ async function storyMassView(
 	storyTrayItems = storyTrayItems.filter(
 		(item: any) =>
 			item.seen < item.latest_reel_media &&
-			item.user.username !== config.username
+			item.user.username != config.username
 	);
+
 	if (!storyTrayItems.length) {
-		logger.info('[STORY_MASS_VIEW] no story left to view!');
+		logger.info(`[${NAMESPACE}] no stories left to view!`);
 		return;
 	}
 
-	const userIds: number[] = [],
-		lastSeenPerUser: any = {};
-	storyTrayItems.map(({ seen, user: { pk } }) => {
+	const userIds: number[] = [];
+	const lastSeenPerUser: any = {};
+
+	storyTrayItems.forEach(({ seen, user: { pk } }) => {
 		lastSeenPerUser[pk] = seen;
 		userIds.push(pk);
 	});
 
-	//view stories
+	// view stories
 	await storyView(client, userIds, lastSeenPerUser);
 }
 
