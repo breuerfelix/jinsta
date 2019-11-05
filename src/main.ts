@@ -6,7 +6,6 @@ import fs from 'fs';
 import { liked$ } from './streams/like';
 import { store } from './core/store';
 
-
 function setupClient(config: Config): IgApiClient {
 	// must be the first thing in the application start
 	addLogRotate(config.workspacePath);
