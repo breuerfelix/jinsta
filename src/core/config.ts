@@ -32,7 +32,7 @@ class Config {
 
 	// program will exit when reached
 	public likeLimit = 35; // 0 to disable
-	public commentLimit = 10; //0 to disable
+	public commentLimit = 10; // 0 to disable
 
 	public tags: string[] = [];
 	public comments: string[] = [];
