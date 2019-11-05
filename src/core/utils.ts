@@ -19,7 +19,7 @@ function convertIDtoPost(mediaID: string): string {
 
 //returns a random number between [lowerBound, upperBound). upperBound is not included
 const random = (lowerBound: number, upperBound: number): number =>
-	lowerBound + Math.floor(Math.random()*(upperBound - lowerBound))
+	lowerBound + Math.floor(Math.random()*(upperBound - lowerBound));
 
 
 export {
