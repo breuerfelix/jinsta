@@ -84,21 +84,21 @@ export async function getFollowers(
 	const id = await client.user.getIdByUsername(username);
 	const userInfo = await client.user.info(id);
 	const followersFeed = client.feed.accountFollowers(id);
-	let followerList = [];
+	const followerList = [];
 	let progress = 0;
 
-	logger.info(`starting to get follower list from %s. Total followers: %s`,
+	logger.info('starting to get follower list from %s. Total followers: %s',
 		username,
 		userInfo.follower_count
-	)
+	);
 
 	return new Promise<any>((resolve, reject) => 
 		followersFeed.items$
 			.pipe(
 				concatMap(x => of(x)
-				.pipe(
-					delay(random(2000, 5000)))
-				)
+					.pipe(
+						delay(random(2000, 5000)))
+					)
 			)
 			.subscribe(
 				followers => {
@@ -115,5 +115,5 @@ export async function getFollowers(
 				error => reject(error),
 				() => resolve([].concat(...followerList))
 			)
-		)
-}
+	)
+};
