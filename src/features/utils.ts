@@ -1,10 +1,13 @@
 import { IgApiClient } from 'instagram-private-api';
 import { Feed } from 'instagram-private-api/dist/core/feed';
+import { of } from 'rxjs';
+import { concatMap, delay } from 'rxjs/operators';
 import { Config } from '../core/config';
 import { media$ } from '../streams/like';
-import { sleep } from '../core/utils';
+import { sleep, random } from '../core/utils';
 import logger from '../core/logging';
 import { addServerCalls } from '../core/store';
+import { User } from '../types';
 
 export async function mediaFeed<T>(
 	client: IgApiClient,
@@ -80,11 +83,11 @@ export function likesForTags(config: Config): Array<number> {
 export async function getFollowers(
 	client: IgApiClient,
 	username: string
-): Promise<any> {
+): Promise<object> {
 	const id = await client.user.getIdByUsername(username);
 	const userInfo = await client.user.info(id);
 	const followersFeed = client.feed.accountFollowers(id);
-	const followerList = [];
+	const followerList:object[] = [];
 	let progress = 0;
 
 	logger.info('starting to get follower list from %s. Total followers: %s',
@@ -110,7 +113,7 @@ export async function getFollowers(
 						userInfo.follower_count
 					);
 					
-					followerList.push(followers.map(el => el.pk));
+					followerList.push(followers.map((el:User) => el.pk));
 				},
 				error => reject(error),
 				() => resolve([].concat(...followerList))
