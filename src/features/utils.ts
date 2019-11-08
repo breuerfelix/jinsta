@@ -98,7 +98,7 @@ export async function getFollowers(
 				concatMap(x => of(x)
 					.pipe(
 						delay(random(2000, 5000)))
-					)
+				)
 			)
 			.subscribe(
 				followers => {
@@ -115,5 +115,5 @@ export async function getFollowers(
 				error => reject(error),
 				() => resolve([].concat(...followerList))
 			)
-	)
-};
+	);
+}
