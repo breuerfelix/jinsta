@@ -75,3 +75,45 @@ export function likesForTags(config: Config): Array<number> {
 
 	return array.map(i => Math.round((i / sum) * likeNumber));
 }
+
+
+export async function getFollowers(
+	client: IgApiClient,
+	username: string
+): Promise<any> {
+	const id = await client.user.getIdByUsername(username);
+	const userInfo = await client.user.info(id);
+	const followersFeed = client.feed.accountFollowers(id);
+	let followerList = [];
+	let progress = 0;
+
+	logger.info(`starting to get follower list from %s. Total followers: %s`,
+		username,
+		userInfo.follower_count
+	)
+
+	return new Promise<any>((resolve, reject) => 
+		followersFeed.items$
+			.pipe(
+				concatMap(x => of(x)
+				.pipe(
+					delay(random(2000, 5000)))
+				)
+			)
+			.subscribe(
+				followers => {
+					progress += followers.length;
+
+					logger.info(
+						'current progress: %d / %d',
+						progress,
+						userInfo.follower_count
+					);
+					
+					followerList.push(followers.map(el => el.pk));
+				},
+				error => reject(error),
+				() => resolve([].concat(...followerList))
+			)
+		)
+}
