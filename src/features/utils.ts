@@ -87,7 +87,7 @@ export async function getFollowers(
 	const id = await client.user.getIdByUsername(username);
 	const userInfo = await client.user.info(id);
 	const followersFeed = client.feed.accountFollowers(id);
-	const followerList:object[] = [];
+	const followerList: object[] = [];
 	let progress = 0;
 
 	logger.info('starting to get follower list from %s. Total followers: %s',
@@ -113,7 +113,7 @@ export async function getFollowers(
 						userInfo.follower_count
 					);
 					
-					followerList.push(followers.map((el:User) => el.pk));
+					followerList.push(followers.map((el: User) => el.pk));
 				},
 				error => reject(error),
 				() => resolve([].concat(...followerList))
