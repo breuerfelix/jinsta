@@ -8,7 +8,7 @@ import {
 
 require('dotenv').config();
 
-async function main() {
+async function main(): Promise<void> {
 	const workspace = './workspace';
 
 	const { IG_USERNAME, IG_PASSWORD } = process.env;
