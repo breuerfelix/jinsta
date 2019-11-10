@@ -19,10 +19,10 @@ export const like$ = media$.pipe(
 				moduleInfo: {
 					module_name: 'profile',
 					user_id: user.pk,
-					username: user.username
+					username: user.username,
 				},
 				// d means like by double tap (1), you cant unlike posts with double tap
-				d: chance(0.5) ? 0 : 1
+				d: chance(.5) ? 0 : 1
 			});
 		} catch (e) {
 			if (e.message.includes('deleted')) {
@@ -30,7 +30,7 @@ export const like$ = media$.pipe(
 				response.error = e;
 			} else {
 				throw e;
-			} // throw the error
+			}
 		}
 
 		return { media, response };
@@ -42,10 +42,12 @@ export const like$ = media$.pipe(
 		logger.error(
 			'[LIKE] unable to like media: %o - response: %o',
 			convertIDtoPost(media.id),
-			response
+			response,
 		);
+
 		return false;
 	}),
+
 	//perform statistics and log computation
 	tap(({ media, response }) => {
 		const config = store.getState().config;
@@ -54,12 +56,12 @@ export const like$ = media$.pipe(
 			store.getState().imageLikes + 1,
 			config.likeLimit,
 			convertIDtoPost(media.id),
-			response
+			response,
 		);
 
 		store.change(({ imageLikes, serverCalls }) => ({
 			imageLikes: imageLikes + 1,
-			serverCalls: serverCalls + 1
+			serverCalls: serverCalls + 1,
 		}));
 	}),
 

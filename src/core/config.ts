@@ -62,28 +62,32 @@ class Config {
 		this.sessionPath = path.resolve(this.workspacePath, 'session.json');
 	}
 
-	public chooseComment = (): string => {
+	public chooseComment(): string {
 		if(!this.comments)
 			throw 'You likely forgot to set comments in your config';
 		return this.comments[Math.floor(Math.random()*this.comments.length)];
 	}
 
-	public findBlacklistedWord = (text: string): string => {
+	public findBlacklistedWord(text: string): string {
 		if (!text) return null;
+
 		for (const key of this.blacklist) {
 			if (text.includes(key)) {
 				return key;
 			}
 		}
+
 		return null;
 	}
 
 	public getInterestRate(text: string, base: number, inc: number): number {
 		if (!text) return base;
+
 		let interest = base;
 		for (const key of this.keywords) {
 			if (text.includes(key)) interest += inc;
 		}
+
 		return interest;
 	}
 }

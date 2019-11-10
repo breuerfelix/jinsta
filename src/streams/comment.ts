@@ -5,6 +5,7 @@ import logger from '../core/logging';
 import { media$ } from './media';
 
 export const comment$ = media$.pipe(
+
 	//execute action
 	flatMap(async media => {
 		const client = store.getState().client;
@@ -15,7 +16,7 @@ export const comment$ = media$.pipe(
 		try {
 			response = await client.media.comment({
 				mediaId: media.id,
-				text: config.chooseComment()
+				text: config.chooseComment(),
 			});
 		} catch (e) {
 			if (e.message.includes('deleted')) {
@@ -36,8 +37,9 @@ export const comment$ = media$.pipe(
 		logger.error(
 			'[COMMENT] unable to comment media: %o - response: %o',
 			convertIDtoPost(media.id),
-			response
+			response,
 		);
+
 		return false;
 	}),
 
@@ -49,12 +51,13 @@ export const comment$ = media$.pipe(
 			store.getState().imageComments + 1,
 			config.commentLimit,
 			convertIDtoPost(media.id),
-			response.text
+			response.text,
 		);
+
 		// increment image comments
 		store.change(({ imageComments, serverCalls }) => ({
 			imageComments: imageComments + 1,
-			serverCalls: serverCalls + 1
+			serverCalls: serverCalls + 1,
 		}));
 	}),
 

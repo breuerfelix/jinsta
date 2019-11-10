@@ -9,30 +9,33 @@ import logger from '../core/logging';
 import { addServerCalls } from '../core/store';
 import { User } from '../types';
 
-export const defaultMediaValidator = (media: any, config: Config): boolean => {
+export function defaultMediaValidator(media: any, config: Config): boolean {
 	if (media.ad_id || media.link) {
 		logger.info('[FILTER] media was an ad with id: %s / link: %s', media.ad_id, media.link);
 		return false;
 	}
+
 	if (media.has_liked) {
 		logger.warn('[FILTER] media was already liked. %s ', media.id);
 		return false;
 	}
+
 	if (!media.caption) {
 		logger.warn('[FILTER] media didn\'t have a caption. %s ', media.id);
 		return false;
 	}
 
 	const { text } = media.caption;
-	let badWord;
-	if((badWord = config.findBlacklistedWord(text))){
+
+	const badWord = config.findBlacklistedWord(text);
+	if(badWord) {
 		logger.warn('[FILTER] media %s matched blacklist word %s', media.id, badWord);
 		return false;
 	}
 
 	const { baseInterest, interestInc } = config;
 	return chance(config.getInterestRate(text, baseInterest, interestInc));
-};
+}
 
 export async function mediaFeed<T>(
 	client: IgApiClient,
@@ -68,8 +71,8 @@ export async function mediaFeed<T>(
 				allMediaIDs.length,
 			);
 
-			if(!defaultMediaValidator(item, config))
-				media$.next(item);
+			// emit media if valid
+			if(!defaultMediaValidator(item, config)) media$.next(item);
 
 			progress++;
 			await sleep(config.mediaDelay);
