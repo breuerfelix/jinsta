@@ -1,10 +1,13 @@
 import { IgApiClient } from 'instagram-private-api';
 import { Feed } from 'instagram-private-api/dist/core/feed';
+import { of } from 'rxjs';
+import { concatMap, delay } from 'rxjs/operators';
 import { Config } from '../core/config';
 import { media$ } from '../streams/like';
-import { sleep } from '../core/utils';
+import { sleep, random } from '../core/utils';
 import logger from '../core/logging';
 import { addServerCalls } from '../core/store';
+import { User } from '../types';
 
 export async function mediaFeed<T>(
 	client: IgApiClient,
@@ -74,4 +77,46 @@ export function likesForTags(config: Config): Array<number> {
 	}
 
 	return array.map(i => Math.round((i / sum) * likeNumber));
+}
+
+
+export async function getFollowers(
+	client: IgApiClient,
+	username: string
+): Promise<object> {
+	const id = await client.user.getIdByUsername(username);
+	const userInfo = await client.user.info(id);
+	const followersFeed = client.feed.accountFollowers(id);
+	const followerList: object[] = [];
+	let progress = 0;
+
+	logger.info('starting to get follower list from %s. Total followers: %s',
+		username,
+		userInfo.follower_count
+	);
+
+	return new Promise<any>((resolve, reject) => 
+		followersFeed.items$
+			.pipe(
+				concatMap(x => of(x)
+					.pipe(
+						delay(random(2000, 5000)))
+				)
+			)
+			.subscribe(
+				followers => {
+					progress += followers.length;
+
+					logger.info(
+						'current progress: %d / %d',
+						progress,
+						userInfo.follower_count
+					);
+					
+					followerList.push(followers.map((el: User) => el.pk));
+				},
+				error => reject(error),
+				() => resolve([].concat(...followerList))
+			)
+	);
 }
