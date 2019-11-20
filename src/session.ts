@@ -47,7 +47,7 @@ function restore(config: Config): void {
 	const additionalConfig = parseSession(config.sessionPath);
 	config.restore = additionalConfig.restore;
 	config.cookie = additionalConfig.cookie;
-	config.seed = additionalConfig.seed;
+	config.seed = additionalConfig.seed || config.seed;
 	config.user = additionalConfig.user;
 }
 
