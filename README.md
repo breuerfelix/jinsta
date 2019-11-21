@@ -4,6 +4,9 @@ special thanks to [@timgrossmann](https://github.com/timgrossmann) for creating 
 
 check out our [discord channel](https://discord.gg/FDETsht) and chat me there to get an invite for the channel :)
 
+after several weeks of testing we came to a sad conclusion that this approach is **not** better than instapy. sooner or later instagram will block all actions made from this bot.  
+you can still use it because its way more lightweight than instapy but dont expect to like pictures as you would be able to on a real device.
+
 ## getting started basic
 
 - install [nodejs](https://nodejs.org)
@@ -152,40 +155,6 @@ IG_PASSWORD=instagram_password
 ## additional information / helpful another projects
 
 - [jinsta_starter](https://github.com/demaya/jinsta_starter/): helpful for scheduling jinsta, e.g. on a raspberry pi at home
-
-## why did we stop working on instapy ?
-
-right now we experience alot of blocks and bans on the current version of instapy. in our opinion this is due to the following reasons:
-
-- instapy uses instagram through the browser
-	- more than 90% of the instagram userbase is accessing it through their official app
-- instapy is working sequentially
-	- for example it is performing all like actions, then all follow actions, then all unfollow actions
-	- a normal user doenst use instagram like this
-- instapy is using direct links
-	- when accessing a user profile to follow him, instapy visit this profile via the direct url
-	- a normal user is accessing the user through their timeline
-	- instagram is able to detect that
-
-to change these behaviours in instapy, we would need to rewrite it from scratch.  
-since there is no maintained python library for the inofficial instagram api, we switched to javascript / typescript instead.
-
-## what about the new algorithm ?
-
-the new algorithm should act more like a casual user on instagram.  
-the bot starts with a 'basefeed' like the current users timeline. now it starts looking through all pictures and is calculating an interest rating for each picture based on the keywords and photo description.  
-based on this rating the bot will interact with the picture and like it. it will also maybe start scrolling through the comments and calculating a rating for each comment.  
-based on this rating, it will interact with the timeline from the user who wrote that comment.  
-now we start at the beginning again calculating a rating for each photo of this users posts...
-
-the bot is diving deeper and deeper into random user feeds and liking / following them.
-
-in every 'feed' we also got some chances of exiting the feed and going back one feed.
-
-this should just visualize the basic idea behind the new algorithm.
-
-if you got any ideas or improvements, feel free to write some issues or contact me at discord!  
-since this is in pre alpha, there is alot to improve (:
 
 ---
 
