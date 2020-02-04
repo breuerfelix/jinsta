@@ -1,28 +1,22 @@
-import { chance, convertIDtoPost } from '../core/utils';
+import { convertIDtoPost } from '../core/utils';
 import { store } from '../core/store';
 import { filter, flatMap, share, tap } from 'rxjs/operators';
 import logger from '../core/logging';
 import { media$ } from './media';
 
-export const like$ = media$.pipe(
+export const comment$ = media$.pipe(
+
 	//execute action
 	flatMap(async media => {
 		const client = store.getState().client;
 		const config = store.getState().config;
-		const { user } = config;
 
 		let response: any = null;
 
 		try {
-			response = await client.media.like({
+			response = await client.media.comment({
 				mediaId: media.id,
-				moduleInfo: {
-					module_name: 'profile',
-					user_id: user.pk,
-					username: user.username,
-				},
-				// d means like by double tap (1), you cant unlike posts with double tap
-				d: chance(.5) ? 0 : 1
+				text: config.chooseComment(),
 			});
 		} catch (e) {
 			if (e.message.includes('deleted')) {
@@ -30,17 +24,18 @@ export const like$ = media$.pipe(
 				response.error = e;
 			} else {
 				throw e;
-			}
+			} // throw the error
 		}
 
 		return { media, response };
 	}),
 	//check if actions was successfull
 	filter(({ media, response }) => {
-		if (response.status == 'ok') return true;
+		if (response.content_type === 'comment' && response.status === 'Active')
+			return true;
 
 		logger.error(
-			'[LIKE] unable to like media: %o - response: %o',
+			'[COMMENT] unable to comment media: %o - response: %o',
 			convertIDtoPost(media.id),
 			response,
 		);
@@ -52,15 +47,16 @@ export const like$ = media$.pipe(
 	tap(({ media, response }) => {
 		const config = store.getState().config;
 		logger.info(
-			'[LIKE] %d / %d - media: %s - response: %o',
-			store.getState().imageLikes + 1,
-			config.likeLimit,
+			'[COMMENT] %d / %d - media: %s - text: %o',
+			store.getState().imageComments + 1,
+			config.commentLimit,
 			convertIDtoPost(media.id),
-			response,
+			response.text,
 		);
 
-		store.change(({ imageLikes, serverCalls }) => ({
-			imageLikes: imageLikes + 1,
+		// increment image comments
+		store.change(({ imageComments, serverCalls }) => ({
+			imageComments: imageComments + 1,
 			serverCalls: serverCalls + 1,
 		}));
 	}),

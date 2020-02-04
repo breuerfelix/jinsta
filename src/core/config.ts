@@ -31,9 +31,11 @@ class Config {
 	public dropFeedChance = .2;
 
 	// program will exit when reached
-	public likeLimit = 35; // 0 for disable
+	public likeLimit = 35; // 0 to disable
+	public commentLimit = 10; // 0 to disable
 
 	public tags: string[] = [];
+	public comments: string[] = [];
 
 	public keywords = [
 		'climate', 'sport', 'vegan', 'world', 'animal',
@@ -41,7 +43,7 @@ class Config {
 	];
 
 	public blacklist = [
-		'porn', 'naked', 'sex', 'vagina', 'penis', 'nude',
+		'naked', 'sex', 'vagina', 'penis', 'nude',
 		'tits', 'boobs', 'like4like', 'nsfw', 'sexy', 'drugs',
 		'babe', 'binary', 'bitcoin', 'crypto', 'forex', 'dick',
 		'squirt', 'gay', 'homo', 'nazi', 'jew', 'judaism',
@@ -58,6 +60,35 @@ class Config {
 		this.password = password;
 		this.workspacePath = path.resolve(path.normalize(workspace));
 		this.sessionPath = path.resolve(this.workspacePath, 'session.json');
+	}
+
+	public chooseComment(): string {
+		if(!this.comments)
+			throw 'You likely forgot to set comments in your config';
+		return this.comments[Math.floor(Math.random()*this.comments.length)];
+	}
+
+	public findBlacklistedWord(text: string): string {
+		if (!text) return null;
+
+		for (const key of this.blacklist) {
+			if (text.includes(key)) {
+				return key;
+			}
+		}
+
+		return null;
+	}
+
+	public getInterestRate(text: string, base: number, inc: number): number {
+		if (!text) return base;
+
+		let interest = base;
+		for (const key of this.keywords) {
+			if (text.includes(key)) interest += inc;
+		}
+
+		return interest;
 	}
 }
 

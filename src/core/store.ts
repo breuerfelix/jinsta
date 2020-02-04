@@ -10,6 +10,7 @@ import { Config } from './config';
 
 interface State {
 	imageLikes: number;
+	imageComments: number;
 	serverCalls: number; // TODO add a limit for this
 
 	config: Config;
@@ -44,6 +45,7 @@ store.pluck = (key: string): Observable<any> => store.pipe(pluck(key), distinctU
 
 const initState: Partial<State> = {
 	imageLikes: 0,
+	imageComments: 0,
 	serverCalls: 0,
 };
 
